@@ -181,7 +181,7 @@ Preferred communication style: Simple, everyday language.
     - "Specialty Care" - purple marker icon
     - "Primary Care" - green marker icon
     - "Infusions" - teal marker icon
-    - "All Other Locations" - circular light blue marker icon
+    - "All Other Locations" - custom blue circular marker icon (sourced from Texas Health)
   - Reduced marker icon size from 32x32px to 24x24px for better visual balance (applied to both map and legend)
   - Legend items centered with proper spacing for clean presentation
   - **Container & Grid Layout** (October 17, 2025):
@@ -205,6 +205,30 @@ Preferred communication style: Simple, everyday language.
     - Removed Bootstrap row/col grid structure in favor of simpler flexbox layout
     - Layout now exactly matches reference design
   
+## Recent Bug Fixes (October 17, 2025)
+- ✅ **Distance Filter Fix**: Fixed the "Search Within" distance filters (5mi, 10mi, 20mi, 50mi) to properly filter locations based on selected distance
+  - Changed default distance behavior from 400 miles to null (no filter by default)
+  - Filter now only applies when a distance button is clicked AND user location is available
+  - Locations display without distance filter until user selects an address and clicks a distance option
+- ✅ **Map Auto-Center**: Map now automatically centers and zooms to show all filtered addresses
+  - Removed fixed centering on user location
+  - Map dynamically adjusts bounds to fit all visible location markers
+  - Provides optimal view of filtered results regardless of location count
+- ✅ **Custom No Results Message**: Updated empty state message to match reference design
+  - Message reads: "Our apologies, but no results were found for your search criteria. Please try something else."
+  - Centered layout with proper spacing and typography
+  - Map markers are cleared when no results are found
+- ✅ **Card Layout Redesign** (October 17, 2025): Updated location cards to match Texas Health reference design
+  - Title in blue (#2563eb) on left side
+  - Distance and "Show on map" stacked vertically on right side (right-aligned)
+  - "Show on map" link positioned below distance with blue map pin icon
+  - Improved address parsing to separate street, suite/unit, and city/state/zip on individual lines
+  - Phone number in green (#16a34a) with phone icon
+  - Button updated to blue (#1e40af) with uppercase text
+  - Font family: System fonts (-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, etc.)
+  - Font sizes: Title 1rem (16px), other text 0.875rem (14px) matching reference
+  - Refined typography and spacing to match reference exactly
+
 ## Known Issues
 - **Geocoding API Permission Required**: The Google Maps API key needs the Geocoding API enabled to calculate distances and show location coordinates. Without this:
   - Locations may not load properly

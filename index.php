@@ -306,22 +306,28 @@
       }
 
       /* Hover effects for links */
-      .phone-link:hover,
+      .phone-link:hover {
+         text-decoration: underline;
+         text-decoration-color: #16a34a;
+         text-decoration-thickness: 2px;
+         text-underline-offset: 3px;
+      }
+
       .map-link:hover {
          text-decoration: underline;
-         text-decoration-color: #28a745;
+         text-decoration-color: #2563eb;
          text-decoration-thickness: 2px;
          text-underline-offset: 3px;
       }
 
       .phone-link {
-         color: #28a745;
+         color: #16a34a;
          text-decoration: none;
          cursor: pointer;
       }
 
       .map-link {
-         color: #0c3666;
+         color: #2563eb;
          text-decoration: none;
          cursor: pointer;
          display: inline-flex;
@@ -477,7 +483,7 @@
          <span>Infusions</span>
       </div>
       <div class="legend-item">
-         <img src="attached_assets/10_1760719237356.png" alt="" class="legend-icon">
+         <img src="attached_assets/other_locations_icon.png" alt="" class="legend-icon">
          <span>All Other Locations</span>
       </div>
    </div>
@@ -649,7 +655,7 @@
 
       // Global variables
       let map, userLocation, markers = [], autocompleteService, placesService;
-      let currentDistance = CONFIG.DEFAULT_DISTANCE;
+      let currentDistance = null; // null means no distance filter applied
       let currentService = '';
       let locationMarkersMap = new Map(); // Map to store markers by location address
       let currentlyBouncingMarker = null; // Track the currently bouncing marker
@@ -908,6 +914,20 @@
             });
          }
 
+         // Filter by distance if user location is available and distance filter is set
+         if (userLocation && currentDistance !== null) {
+            locations = locations.filter(location => {
+               if (!location.lat || !location.lng) return false;
+               const distance = calculateDistance(
+                  userLocation.lat,
+                  userLocation.lng,
+                  location.lat,
+                  location.lng
+               );
+               return distance <= currentDistance;
+            });
+         }
+
          return locations;
       }
       // Update results and map
@@ -928,7 +948,11 @@
          console.log('Container parent:', container ? container.parentElement : 'NO PARENT');
 
          if (locations.length === 0) {
-            container.innerHTML = '<div class="no-results">No locations were found that match your search criteria.</div>';
+            container.innerHTML = '<div class="no-results" style="text-align: center; padding: 60px 20px; font-size: 1.4rem; color: #333; line-height: 1.8;">Our apologies, but no results were found for your search criteria. Please try something else.</div>';
+            // Clear map markers when no results
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+            locationMarkersMap.clear();
             return;
          }
 
@@ -959,53 +983,69 @@
             const mapQuery = encodeURIComponent(location.address);
             const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
-            // Split address into lines for better display
-            const addressParts = location.address.split(',');
-            const streetAddress = addressParts[0]?.trim() || '';
-            const cityStateZip = addressParts.slice(1).join(',').trim() || '';
+            // Split address into separate lines
+            const addressParts = location.address.split(',').map(p => p.trim());
+            const street = addressParts[0] || '';
+            // Check if second part is a suite/unit (contains "Suite", "Ste", "Unit", "#")
+            let suite = '';
+            let cityStateZip = '';
+            
+            if (addressParts.length > 2) {
+               const secondPart = addressParts[1] || '';
+               if (secondPart.match(/suite|ste|unit|#/i)) {
+                  suite = secondPart;
+                  cityStateZip = addressParts.slice(2).join(', ');
+               } else {
+                  cityStateZip = addressParts.slice(1).join(', ');
+               }
+            } else if (addressParts.length === 2) {
+               cityStateZip = addressParts[1];
+            }
 
             // Create unique identifier for this location
             const locationId = `location-${index}`;
 
             return `
-                     <div class="loc-map-sec-clinic-card" id="${locationId}">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                           <h3 style="color: #0c3666; margin: 0; font-size: 1.125rem; font-weight: 600; line-height: 1.4;">${location.type}</h3>
-                           ${location.distance !== null ? `
-                              <span style="color: #000; font-size: 0.95rem; font-weight: 400; white-space: nowrap; margin-left: 12px;">
-                                 ${location.distance.toFixed(1)} Miles
-                              </span>
-                           ` : ''}
-                        </div>
-                        
-                        <div style="margin-bottom: 12px;">
-                           <a href="javascript:void(0)" onclick="showLocationOnMap('${location.address.replace(/'/g, "\\'")}', ${location.lat}, ${location.lng})" class="map-link" style="color: #0c3666; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center;">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#0c3666" style="margin-right: 4px;">
-                                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                              </svg>
-                              Show on map
-                           </a>
+                     <div class="loc-map-sec-clinic-card" id="${locationId}" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                           <h3 style="color: #2563eb; margin: 0; font-size: 1rem; font-weight: 600; line-height: 1.4; flex: 1;">${location.type}</h3>
+                           <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; margin-left: 16px;">
+                              ${location.distance !== null ? `
+                                 <span style="color: #1f2937; font-size: 0.875rem; font-weight: 500; white-space: nowrap;">
+                                    ${location.distance.toFixed(1)} Miles
+                                 </span>
+                              ` : ''}
+                              <a href="javascript:void(0)" onclick="showLocationOnMap('${location.address.replace(/'/g, "\\'")}', ${location.lat}, ${location.lng})" class="map-link" style="color: #2563eb; font-size: 0.875rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#2563eb" style="flex-shrink: 0;">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                 </svg>
+                                 Show on map
+                              </a>
+                           </div>
                         </div>
 
-                        <div style="margin-bottom: 12px;">
-                           <div style="font-size: 1rem; color: #000; line-height: 1.6; font-weight: 400;">
-                              ${streetAddress}
+                        <div style="margin-bottom: 14px; line-height: 1.5;">
+                           <div style="font-size: 0.875rem; color: #1f2937;">
+                              ${street}
                            </div>
-                           <div style="font-size: 1rem; color: #000; line-height: 1.6; font-weight: 400;">
+                           ${suite ? `<div style="font-size: 0.875rem; color: #1f2937;">
+                              ${suite}
+                           </div>` : ''}
+                           <div style="font-size: 0.875rem; color: #1f2937;">
                               ${cityStateZip}
                            </div>
                         </div>
 
                         <div style="margin-bottom: 16px;">
-                           <a href="tel:866-303-6929" class="phone-link" style="color: #28a745; font-size: 1rem; font-weight: 400; text-decoration: none; display: inline-flex; align-items: center;">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#28a745" style="margin-right: 6px;">
+                           <a href="tel:682-549-7961" class="phone-link" style="color: #16a34a; font-size: 0.875rem; font-weight: 400; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#16a34a" style="flex-shrink: 0;">
                                  <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                               </svg>
-                              469-495-9164
+                              682-549-7961
                            </a>
                         </div>
 
-                        <button style="background-color: #0c3666; color: white; border: none; padding: 14px 20px; width: 100%; cursor: pointer; font-size: 1rem; font-weight: 600; border-radius: 0; letter-spacing: 0.5px;" onclick="window.open('${mapLink}', '_blank')">
+                        <button style="background-color: #1e40af; color: white; border: none; padding: 11px 20px; width: 100%; cursor: pointer; font-size: 0.875rem; font-weight: 600; border-radius: 0; letter-spacing: 0.5px; text-transform: uppercase; font-family: inherit;" onclick="window.open('${mapLink}', '_blank')">
                            LOCATION DETAILS
                         </button>
                      </div>
@@ -1056,11 +1096,6 @@
          locationMarkersMap.clear();
          currentlyBouncingMarker = null; // Reset bouncing marker
 
-         // Center map on user location if available (without showing marker)
-         if (userLocation) {
-            map.setCenter(userLocation);
-         }
-
          // Add markers for all locations
          locations.forEach(location => {
             if (location.lat && location.lng) {
@@ -1089,9 +1124,8 @@
                
                const infoWindow = new google.maps.InfoWindow({
                   content: `
-                     <div style="padding: 12px 16px; min-width: 250px; font-family: Arial, sans-serif; position: relative;">
-                        <button onclick="this.closest('.gm-style-iw').previousSibling.click()" style="position: absolute; top: 8px; right: 8px; background: none; border: none; font-size: 24px; cursor: pointer; color: #666; line-height: 1; padding: 0; width: 24px; height: 24px;">&times;</button>
-                        <h3 style="margin: 0 0 8px 0; color: #000; font-size: 16px; font-weight: 600; padding-right: 20px;">${location.type}</h3>
+                     <div style="padding: 12px 16px; min-width: 250px; font-family: Arial, sans-serif;">
+                        <h3 style="margin: 0 0 8px 0; color: #000; font-size: 16px; font-weight: 600;">${location.type}</h3>
                         <p style="margin: 4px 0; color: #333; font-size: 14px; line-height: 1.5;">${streetAddress}</p>
                         ${suite ? `<p style="margin: 4px 0; color: #333; font-size: 14px; line-height: 1.5;">${suite}</p>` : ''}
                         <p style="margin: 4px 0 12px 0; color: #333; font-size: 14px; line-height: 1.5;">${cityStateZip}</p>

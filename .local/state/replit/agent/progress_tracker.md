@@ -23,3 +23,9 @@
 [x] 23. Add gestureHandling: 'greedy' for map zoom without ctrl
 [x] 24. Fix flex-wrap to nowrap on desktop to keep panels side-by-side
 [x] 25. Set max-width: 50% on both panels to prevent wrapping
+[x] 26. Update "All Other Locations" legend icon with custom Texas Health icon
+[x] 27. Fix distance filter to properly filter locations by selected distance (5mi, 10mi, 20mi, 50mi)
+[x] 28. Update map to auto-center on filtered addresses instead of user location
+[x] 29. Add custom "no results" message matching reference design
+[x] 30. Update card layout to exactly match reference website design with blue color scheme
+[x] 31. Move "Show on map" link below distance (right-aligned) and match all font sizes to reference
