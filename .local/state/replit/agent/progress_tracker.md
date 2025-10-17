@@ -15,3 +15,11 @@
 [x] 15. Add hover effects for phone and "Show on map" links (green underline)
 [x] 16. Implement marker bounce animation when clicking "Show on map"
 [x] 17. Redesign marker popup to match reference image with buttons
+[x] 18. Make marker bounce animation continuous until user clicks marker or another "Show on map" link
+[x] 19. Restructure location cards to match reference layout with Bootstrap grid system
+[x] 20. Wrap all sections in container and make map & listing equal size (50/50)
+[x] 21. Set map height to 44rem and card listing to 44rem with smooth scrolling
+[x] 22. Restructure card layout to match reference: title/distance on same row, simplified flexbox layout
+[x] 23. Add gestureHandling: 'greedy' for map zoom without ctrl
+[x] 24. Fix flex-wrap to nowrap on desktop to keep panels side-by-side
+[x] 25. Set max-width: 50% on both panels to prevent wrapping

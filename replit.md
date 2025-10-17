@@ -27,6 +27,16 @@ Preferred communication style: Simple, everyday language.
 - **Rationale**: Enables address search, distance filtering, and visual map display while maintaining server-side simplicity
 - **Trade-offs**: Requires JavaScript enabled, API key management, but gains rich interactive features
 
+## Map Controls & User Experience
+
+**Map Zoom Control**:
+- Map uses `gestureHandling: 'greedy'` mode, allowing users to zoom with mouse scroll wheel without holding Ctrl key
+- Smooth and intuitive map navigation experience
+
+**Smooth Scrolling**:
+- Card listing has `scroll-behavior: smooth` for better user experience when scrolling through locations
+- Independent scrolling for card listing panel while map remains fixed
+
 ## Location Finder Features
 
 **Interactive Search & Filtering**:
@@ -141,11 +151,20 @@ Preferred communication style: Simple, everyday language.
   - Geocoding integration for address-to-coordinates conversion
 - ✅ UI Improvements (October 17, 2025):
   - Removed user location marker from map for cleaner display
-  - Distance now displayed as prominent blue badge in top-right of location cards
-  - "Show on map" link moved below phone number for better card organization
+  - Distance now displayed as plain text in top-right of location cards (matching reference design)
+  - "Show on map" link positioned in top-right with distance using Bootstrap responsive grid
+  - Restructured location cards to match reference HTML layout:
+    - Uses Bootstrap's responsive grid system (`.row`, `.col-12`, `.col-md-7`, `.col-md-5`)
+    - Location name on left (70% width on medium+ screens)
+    - "Show on map" link and distance on right (30% width on medium+ screens)
+    - Full width stack on mobile devices
+    - Added semantic class names: `.profile-details`, `.profile-data`, `.map-data`, `.address-row`, `.telephone`, `.action-row`
 - ✅ Interactive Features Update (October 17, 2025):
   - Added green underline hover effects for phone number and "Show on map" links
-  - Implemented marker bounce animation (2-second duration) when clicking "Show on map"
+  - Implemented continuous marker bounce animation when clicking "Show on map"
+    - Animation continues indefinitely until user clicks on the bouncing marker OR clicks another "Show on map" link
+    - Only one marker can bounce at a time - selecting a new location stops the previous marker
+    - Clicking on the bouncing marker stops animation and shows the location info popup
   - Updated "Show on map" to ONLY animate marker without moving map or opening popup
   - Redesigned marker info window popup to match reference design with:
     - Location name/type in bold header
@@ -165,6 +184,26 @@ Preferred communication style: Simple, everyday language.
     - "All Other Locations" - circular light blue marker icon
   - Reduced marker icon size from 32x32px to 24x24px for better visual balance (applied to both map and legend)
   - Legend items centered with proper spacing for clean presentation
+  - **Container & Grid Layout** (October 17, 2025):
+    - Wrapped all sections (searchbar, filters, header, legend, map, listing) in a container (max-width: 1400px)
+    - Changed map and listing grid from 33/67 split to equal 50/50 split on desktop
+    - Map and listing panels now have identical width for balanced layout
+    - Maintains full-width stacking on mobile devices
+  - **Fixed Height & Scrolling** (October 17, 2025):
+    - Set map height to 44rem (fixed height per user requirement)
+    - Set card listing height to 44rem (matches map height exactly)
+    - Card listing scrolls independently with overflow-y: auto and scroll-behavior: smooth
+    - Both panels have equal height creating clean visual alignment
+    - Added flex-wrap: nowrap on desktop to ensure panels stay side-by-side
+    - Set max-width: 50% on both panels to prevent wrapping
+  - **Card Layout Restructure** (October 17, 2025):
+    - Title and distance now on same row using flexbox (title left, distance right)
+    - "Show on map" link appears on its own line below title
+    - Address lines displayed below
+    - Phone number with icon below address
+    - Blue "LOCATION DETAILS" button at bottom of card
+    - Removed Bootstrap row/col grid structure in favor of simpler flexbox layout
+    - Layout now exactly matches reference design
   
 ## Known Issues
 - **Geocoding API Permission Required**: The Google Maps API key needs the Geocoding API enabled to calculate distances and show location coordinates. Without this:

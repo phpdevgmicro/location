@@ -178,10 +178,10 @@
       .loc-map-sec-main {
          display: flex;
          flex-wrap: wrap;
-         padding: 2rem;
+         padding: 1rem;
          gap: 1rem;
          background-color: #f2f2f2;
-         min-height: 80vh;
+         align-items: stretch;
       }
 
       .loc-map-sec-left,
@@ -194,7 +194,7 @@
          border-radius: 12px;
          overflow: hidden;
          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-         height: 70vh;
+         height: 44rem;
       }
 
       .loc-map-sec-clinic-card {
@@ -272,8 +272,9 @@
       }
 
       .loc-map-sec-left {
-         max-height: 70vh;
-         overflow-y: scroll;
+         height: 44rem;
+         overflow-y: auto;
+         scroll-behavior: smooth;
       }
 
       .loc-map-sec-radio-button.active {
@@ -376,12 +377,18 @@
 
       @media (min-width: 768px) {
 
+         .loc-map-sec-main {
+            flex-wrap: nowrap;
+         }
+
          .loc-map-sec-left {
-            flex: 1 1 33%;
+            flex: 1 1 50%;
+            max-width: 50%;
          }
 
          .loc-map-sec-right {
-            flex: 1 1 64%;
+            flex: 1 1 50%;
+            max-width: 50%;
          }
 
 
@@ -405,7 +412,7 @@
       </p>
    </section>
 
-
+   <div class="container" style="max-width: 1400px; margin: 0 auto;">
    <div class="loc-map-sec-searchbar">
       <div class="loc-map-sec-searchbar-wrapper">
          <div class="loc-map-sec-group">
@@ -484,6 +491,7 @@
          <div id="map" style="width: 100%; height: 100%;"></div>
       </div>
    </div>
+   </div><!-- End container -->
 
    <script>
       // Configuration and Data
@@ -644,6 +652,7 @@
       let currentDistance = CONFIG.DEFAULT_DISTANCE;
       let currentService = '';
       let locationMarkersMap = new Map(); // Map to store markers by location address
+      let currentlyBouncingMarker = null; // Track the currently bouncing marker
 
       // Get user's location on page load
       function getUserLocation() {
@@ -725,6 +734,7 @@
          map = new google.maps.Map(document.getElementById('map'), {
             zoom: CONFIG.MAP_ZOOM,
             center: { lat: 32.0895413, lng: -97.3628779, }, // Dallas center
+            gestureHandling: 'greedy', // Allow zoom without ctrl
             styles: [
                {
                   featureType: 'poi',
@@ -959,26 +969,25 @@
 
             return `
                      <div class="loc-map-sec-clinic-card" id="${locationId}">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                            <h3 style="color: #0c3666; margin: 0; font-size: 1.125rem; font-weight: 600; line-height: 1.4;">${location.type}</h3>
-
-                           <div style="text-align: right;">
-                              ${location.distance !== null ? `
-                                 <div style="color: #000; font-size: 1.125rem; font-weight: 400; line-height: 1.4; margin-bottom: 8px;">
-                                    ${location.distance.toFixed(1)} Miles
-                                 </div>
-                              ` : ''}
-
-                              <a href="javascript:void(0)" onclick="showLocationOnMap('${location.address.replace(/'/g, "\\'")}', ${location.lat}, ${location.lng})" class="map-link" style="font-size: 1rem;">
-                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#0c3666" style="flex-shrink: 0;">
-                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                                 </svg>
-                                 Show on map
-                              </a>
-                           </div>
+                           ${location.distance !== null ? `
+                              <span style="color: #000; font-size: 0.95rem; font-weight: 400; white-space: nowrap; margin-left: 12px;">
+                                 ${location.distance.toFixed(1)} Miles
+                              </span>
+                           ` : ''}
+                        </div>
+                        
+                        <div style="margin-bottom: 12px;">
+                           <a href="javascript:void(0)" onclick="showLocationOnMap('${location.address.replace(/'/g, "\\'")}', ${location.lat}, ${location.lng})" class="map-link" style="color: #0c3666; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center;">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#0c3666" style="margin-right: 4px;">
+                                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                              </svg>
+                              Show on map
+                           </a>
                         </div>
 
-                        <div style="margin: 16px 0;">
+                        <div style="margin-bottom: 12px;">
                            <div style="font-size: 1rem; color: #000; line-height: 1.6; font-weight: 400;">
                               ${streetAddress}
                            </div>
@@ -987,14 +996,16 @@
                            </div>
                         </div>
 
-                        <a href="tel:866-303-6929" class="phone-link" style="font-size: 1rem; margin: 16px 0; font-weight: 400; display: block;">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#28a745" style="vertical-align: middle; margin-right: 6px;">
-                              <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-                           </svg>
-                           866-303-6929
-                        </a>
+                        <div style="margin-bottom: 16px;">
+                           <a href="tel:866-303-6929" class="phone-link" style="color: #28a745; font-size: 1rem; font-weight: 400; text-decoration: none; display: inline-flex; align-items: center;">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#28a745" style="margin-right: 6px;">
+                                 <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                              </svg>
+                              469-495-9164
+                           </a>
+                        </div>
 
-                        <button style="background-color: #0c3666; color: white; border: none; padding: 14px 20px; width: 100%; cursor: pointer; font-size: 1rem; font-weight: 600; border-radius: 0; margin-top: 12px; letter-spacing: 0.5px;" onclick="window.open('${mapLink}', '_blank')">
+                        <button style="background-color: #0c3666; color: white; border: none; padding: 14px 20px; width: 100%; cursor: pointer; font-size: 1rem; font-weight: 600; border-radius: 0; letter-spacing: 0.5px;" onclick="window.open('${mapLink}', '_blank')">
                            LOCATION DETAILS
                         </button>
                      </div>
@@ -1043,6 +1054,7 @@
          markers.forEach(marker => marker.setMap(null));
          markers = [];
          locationMarkersMap.clear();
+         currentlyBouncingMarker = null; // Reset bouncing marker
 
          // Center map on user location if available (without showing marker)
          if (userLocation) {
@@ -1092,6 +1104,12 @@
                });
 
                marker.addListener('click', () => {
+                  // Stop bouncing if this marker is bouncing
+                  if (currentlyBouncingMarker === marker) {
+                     marker.setAnimation(null);
+                     currentlyBouncingMarker = null;
+                  }
+                  
                   // Close all other info windows
                   markers.forEach(m => {
                      if (m.infoWindow) {
@@ -1119,17 +1137,18 @@
 
       // Function to show location on map with animation
       function showLocationOnMap(address, lat, lng) {
+         // Stop any currently bouncing marker
+         if (currentlyBouncingMarker) {
+            currentlyBouncingMarker.setAnimation(null);
+         }
+         
          // Find the marker for this location
          const marker = locationMarkersMap.get(address);
          
          if (marker) {
-            // Only animate marker with bounce - don't move map or open popup
+            // Start marker bouncing - it will continue until clicked or another marker is selected
             marker.setAnimation(google.maps.Animation.BOUNCE);
-            
-            // Stop animation after 2 seconds
-            setTimeout(() => {
-               marker.setAnimation(null);
-            }, 2000);
+            currentlyBouncingMarker = marker;
          }
       }
 
