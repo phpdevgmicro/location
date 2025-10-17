@@ -11,3 +11,7 @@
 [x] 11. Make distance display more prominent with blue badge design
 [x] 12. Add fallback for geocoding errors
 [x] 13. Document geocoding API permission issue
+[x] 14. Final verification and import completion (October 17, 2025)
+[x] 15. Add hover effects for phone and "Show on map" links (green underline)
+[x] 16. Implement marker bounce animation when clicking "Show on map"
+[x] 17. Redesign marker popup to match reference image with buttons

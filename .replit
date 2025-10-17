@@ -1,8 +1,8 @@
 entrypoint = "index.html"
-modules = ["web", "php-8.2"]
+modules = ["php-8.2", "web"]
 
 [nix]
-channel = "stable-24_11"
+channel = "stable-25_05"
 packages = ["static-web-server"]
 
 [deployment]
@@ -49,6 +49,10 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 38701
+externalPort = 3003
 
 [[ports]]
 localPort = 40095

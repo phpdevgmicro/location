@@ -143,6 +143,28 @@ Preferred communication style: Simple, everyday language.
   - Removed user location marker from map for cleaner display
   - Distance now displayed as prominent blue badge in top-right of location cards
   - "Show on map" link moved below phone number for better card organization
+- ✅ Interactive Features Update (October 17, 2025):
+  - Added green underline hover effects for phone number and "Show on map" links
+  - Implemented marker bounce animation (2-second duration) when clicking "Show on map"
+  - Updated "Show on map" to ONLY animate marker without moving map or opening popup
+  - Redesigned marker info window popup to match reference design with:
+    - Location name/type in bold header
+    - Full address split across multiple lines
+    - Two action buttons: "Location Details" and "Get Directions"
+    - Close button (X) in top-right corner
+    - Clean white background with blue bordered buttons
+- ✅ Reference Design Match Update (October 17, 2025):
+  - Changed location header background from blue (#0c3666) to green (#28a745)
+  - Added informational legend below green header showing marker references
+  - Legend displays marker icons for each location type (purely informational, non-interactive):
+    - "Urgent Care" - red marker icon
+    - "Hospital" - blue marker icon  
+    - "Specialty Care" - purple marker icon
+    - "Primary Care" - green marker icon
+    - "Infusions" - teal marker icon
+    - "All Other Locations" - circular light blue marker icon
+  - Reduced marker icon size from 32x32px to 24x24px for better visual balance (applied to both map and legend)
+  - Legend items centered with proper spacing for clean presentation
   
 ## Known Issues
 - **Geocoding API Permission Required**: The Google Maps API key needs the Geocoding API enabled to calculate distances and show location coordinates. Without this:

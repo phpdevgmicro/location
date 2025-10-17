@@ -216,12 +216,12 @@
       }
 
       .loc-map-sec-header {
-         background-color: #0c3666;
+         background-color: #28a745;
          width: 100%;
          padding: 1rem;
-
          color: white;
-
+         font-size: 1.1rem;
+         font-weight: 500;
       }
 
       .loc-map-sec-clinic-card p {
@@ -249,11 +249,12 @@
       .legend-bar {
          display: flex;
          flex-wrap: wrap;
-         gap: 1rem;
+         gap: 1.5rem;
          align-items: center;
-         justify-content: flex-end;
-         padding: 1rem 4rem;
-         background-color: #f2f2f2;
+         justify-content: center;
+         padding: 1.5rem 2rem;
+         background-color: white;
+         border-bottom: 1px solid #e0e0e0;
       }
 
       .legend-item {
@@ -264,45 +265,10 @@
       }
 
       .legend-icon {
-         width: 20px;
-         height: 20px;
+         width: 24px;
+         height: 24px;
          margin-right: 8px;
-         background-color: white;
-         border-radius: 50%;
-         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
          object-fit: contain;
-      }
-
-      .legend-dot {
-         width: 14px;
-         height: 14px;
-         border-radius: 50%;
-         display: inline-block;
-         margin-right: 6px;
-      }
-
-      .urgent {
-         background-color: #2ca46f;
-      }
-
-      .hospital {
-         background-color: #2962ff;
-      }
-
-      .neighborhood {
-         background-color: #ff8c00;
-      }
-
-      .primary {
-         background-color: #50b748;
-      }
-
-      .specialist {
-         background-color: #ff6f00;
-      }
-
-      .other {
-         background-color: #2196F3;
       }
 
       .loc-map-sec-left {
@@ -338,6 +304,39 @@
          scrollbar-color: #888 #f1f1f1;
       }
 
+      /* Hover effects for links */
+      .phone-link:hover,
+      .map-link:hover {
+         text-decoration: underline;
+         text-decoration-color: #28a745;
+         text-decoration-thickness: 2px;
+         text-underline-offset: 3px;
+      }
+
+      .phone-link {
+         color: #28a745;
+         text-decoration: none;
+         cursor: pointer;
+      }
+
+      .map-link {
+         color: #0c3666;
+         text-decoration: none;
+         cursor: pointer;
+         display: inline-flex;
+         align-items: center;
+         gap: 6px;
+         font-weight: 400;
+         white-space: nowrap;
+      }
+
+      /* Marker bounce animation */
+      @keyframes markerBounce {
+         0%, 100% { transform: translateY(0); }
+         25% { transform: translateY(-15px); }
+         50% { transform: translateY(0); }
+         75% { transform: translateY(-8px); }
+      }
 
       /* Responsive font scaling */
       @media (max-width: 600px) {
@@ -644,6 +643,7 @@
       let map, userLocation, markers = [], autocompleteService, placesService;
       let currentDistance = CONFIG.DEFAULT_DISTANCE;
       let currentService = '';
+      let locationMarkersMap = new Map(); // Map to store markers by location address
 
       // Get user's location on page load
       function getUserLocation() {
@@ -945,7 +945,7 @@
             });
          }
 
-         const htmlContent = locationsWithDistance.map(location => {
+         const htmlContent = locationsWithDistance.map((location, index) => {
             const mapQuery = encodeURIComponent(location.address);
             const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
@@ -954,8 +954,11 @@
             const streetAddress = addressParts[0]?.trim() || '';
             const cityStateZip = addressParts.slice(1).join(',').trim() || '';
 
+            // Create unique identifier for this location
+            const locationId = `location-${index}`;
+
             return `
-                     <div class="loc-map-sec-clinic-card">
+                     <div class="loc-map-sec-clinic-card" id="${locationId}">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
                            <h3 style="color: #0c3666; margin: 0; font-size: 1.125rem; font-weight: 600; line-height: 1.4;">${location.type}</h3>
 
@@ -966,7 +969,7 @@
                                  </div>
                               ` : ''}
 
-                              <a href="${mapLink}" target="_blank" style="color: #0c3666; text-decoration: none; font-size: 1rem; display: inline-flex; align-items: center; gap: 6px; font-weight: 400; white-space: nowrap;">
+                              <a href="javascript:void(0)" onclick="showLocationOnMap('${location.address.replace(/'/g, "\\'")}', ${location.lat}, ${location.lng})" class="map-link" style="font-size: 1rem;">
                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#0c3666" style="flex-shrink: 0;">
                                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                                  </svg>
@@ -984,12 +987,12 @@
                            </div>
                         </div>
 
-                        <div style="color: #28a745; font-size: 1rem; margin: 16px 0; font-weight: 400;">
+                        <a href="tel:866-303-6929" class="phone-link" style="font-size: 1rem; margin: 16px 0; font-weight: 400; display: block;">
                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#28a745" style="vertical-align: middle; margin-right: 6px;">
                               <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                            </svg>
                            866-303-6929
-                        </div>
+                        </a>
 
                         <button style="background-color: #0c3666; color: white; border: none; padding: 14px 20px; width: 100%; cursor: pointer; font-size: 1rem; font-weight: 600; border-radius: 0; margin-top: 12px; letter-spacing: 0.5px;" onclick="window.open('${mapLink}', '_blank')">
                            LOCATION DETAILS
@@ -1039,6 +1042,7 @@
          // Clear existing markers
          markers.forEach(marker => marker.setMap(null));
          markers = [];
+         locationMarkersMap.clear();
 
          // Center map on user location if available (without showing marker)
          if (userLocation) {
@@ -1056,26 +1060,50 @@
                   title: location.type + ' - ' + location.address,
                   icon: {
                      url: iconPath,
-                     scaledSize: new google.maps.Size(32, 32)
+                     scaledSize: new google.maps.Size(24, 24)
                   }
                });
 
-               // Add info window
+               // Split address for better display
+               const addressParts = location.address.split(',');
+               const streetAddress = addressParts[0]?.trim() || '';
+               const suite = addressParts.slice(1, -1).join(',').trim() || '';
+               const cityStateZip = addressParts.slice(-1)[0]?.trim() || '';
+
+               // Add info window with proper styling matching reference
+               const mapQuery = encodeURIComponent(location.address);
+               const directionsLink = `https://www.google.com/maps/dir/?api=1&destination=${mapQuery}`;
+               const detailsLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+               
                const infoWindow = new google.maps.InfoWindow({
                   content: `
-                     <div style="padding: 8px;">
-                        <h4 style="margin: 0 0 8px 0; color: #0c3666;">${location.type}</h4>
-                        <p style="margin: 4px 0;">${location.address}</p>
-                        ${location.distance !== null ? `<p style="margin: 4px 0; font-weight: 500;">${location.distance.toFixed(1)} Miles</p>` : ''}
+                     <div style="padding: 12px 16px; min-width: 250px; font-family: Arial, sans-serif; position: relative;">
+                        <button onclick="this.closest('.gm-style-iw').previousSibling.click()" style="position: absolute; top: 8px; right: 8px; background: none; border: none; font-size: 24px; cursor: pointer; color: #666; line-height: 1; padding: 0; width: 24px; height: 24px;">&times;</button>
+                        <h3 style="margin: 0 0 8px 0; color: #000; font-size: 16px; font-weight: 600; padding-right: 20px;">${location.type}</h3>
+                        <p style="margin: 4px 0; color: #333; font-size: 14px; line-height: 1.5;">${streetAddress}</p>
+                        ${suite ? `<p style="margin: 4px 0; color: #333; font-size: 14px; line-height: 1.5;">${suite}</p>` : ''}
+                        <p style="margin: 4px 0 12px 0; color: #333; font-size: 14px; line-height: 1.5;">${cityStateZip}</p>
+                        <div style="display: flex; gap: 8px; margin-top: 12px;">
+                           <a href="${detailsLink}" target="_blank" style="flex: 1; padding: 8px 12px; background-color: white; color: #1a73e8; border: 2px solid #1a73e8; text-decoration: none; font-size: 13px; font-weight: 500; text-align: center; border-radius: 4px; cursor: pointer; display: inline-block;">Location Details</a>
+                           <a href="${directionsLink}" target="_blank" style="flex: 1; padding: 8px 12px; background-color: white; color: #1a73e8; border: 2px solid #1a73e8; text-decoration: none; font-size: 13px; font-weight: 500; text-align: center; border-radius: 4px; cursor: pointer; display: inline-block;">Get Directions</a>
+                        </div>
                      </div>
                   `
                });
 
                marker.addListener('click', () => {
+                  // Close all other info windows
+                  markers.forEach(m => {
+                     if (m.infoWindow) {
+                        m.infoWindow.close();
+                     }
+                  });
                   infoWindow.open(map, marker);
                });
 
+               marker.infoWindow = infoWindow;
                markers.push(marker);
+               locationMarkersMap.set(location.address, marker);
             }
          });
 
@@ -1086,6 +1114,22 @@
                bounds.extend(marker.getPosition());
             });
             map.fitBounds(bounds);
+         }
+      }
+
+      // Function to show location on map with animation
+      function showLocationOnMap(address, lat, lng) {
+         // Find the marker for this location
+         const marker = locationMarkersMap.get(address);
+         
+         if (marker) {
+            // Only animate marker with bounce - don't move map or open popup
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+            
+            // Stop animation after 2 seconds
+            setTimeout(() => {
+               marker.setAnimation(null);
+            }, 2000);
          }
       }
 
