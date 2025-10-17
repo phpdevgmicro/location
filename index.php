@@ -198,12 +198,21 @@
       }
 
       .loc-map-sec-clinic-card {
-         padding: 1.25rem;
-         border: 1px solid #d0d0d0;
-         margin-bottom: 1rem;
-         border-radius: 0;
-         background-color: #ffffff;
+         background: white;
+         border-radius: 8px;
          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+         padding: 20px;
+         margin-bottom: 16px;
+         display: block;
+         min-height: 150px;
+         border: 1px solid #e0e0e0;
+         transition: box-shadow 0.3s ease, transform 0.2s ease;
+         cursor: pointer;
+      }
+
+      .loc-map-sec-clinic-card:hover {
+         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+         transform: translateY(-2px);
       }
 
       .loc-map-sec-header {
@@ -383,6 +392,7 @@
       }
    </style>
 
+   <link rel="stylesheet" href="locations.css">
 </head>
 
 <body>
@@ -508,116 +518,126 @@
          }
       };
 
-     const LOCATION_DATA = {
-         "primary_care": {
-            type: "Primary Care Office",
-            count: 14,
-            description: "Includes Family Medicine, Internal Medicine, Preventive, and Nurse Practitioners",
-            addresses: [
-               "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234",
-               "4211 Cedar Springs Rd, Dallas, TX 75219",
-               "2700 W Pleasant Run Rd, Lancaster, TX 75146",
-               "1395 E Eldorado Pkwy Suite 400, Little Elm, TX 75068",
-               "2540 N. Galloway Ave Suite 103, Mesquite, TX 75150",
-               "1909 Central Dr Ste 202, Bedford, TX 76021",
-               "2380 E. Park Blvd St. 300, Plano, TX 75074",
-               "220 E 3rd Ave, Corsicana, TX 75110",
-               "1401 Jane Lane, West, TX 76691",
-               "6101 Windhaven Pkwy Ste 145, Plano, TX 75093",
-               "2300 W Michigan Ave Suite 7, Midland, TX 79701",
-               "3003 Fannin St, Houston, TX 77004",
-               "12930 Dairy Ashford Rd Ste 702A, Sugarland, TX 77478",
-               "802 W Lampasas Street, Ennis, TX 75119"
+     const LOCATION_DATA = [
+         {
+            "type": "Primary Care Office",
+            "serviceKey": "primary_care",
+            "count": 14,
+            "description": "Includes Family Medicine, Internal Medicine, Preventive, and Nurse Practitioners",
+            "locations": [
+               {"address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234", "coordinates": {"lat": 32.9267, "lng": -96.8906}},
+               {"address": "4211 Cedar Springs Rd, Dallas, TX 75219", "coordinates": {"lat": 32.8089, "lng": -96.8067}},
+               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}},
+               {"address": "1395 E Eldorado Pkwy Suite 400, Little Elm, TX 75068", "coordinates": {"lat": 33.1625, "lng": -96.9375}},
+               {"address": "2540 N. Galloway Ave Suite 103, Mesquite, TX 75150", "coordinates": {"lat": 32.7989, "lng": -96.5853}},
+               {"address": "1909 Central Dr Ste 202, Bedford, TX 76021", "coordinates": {"lat": 32.8440, "lng": -97.1431}},
+               {"address": "2380 E. Park Blvd St. 300, Plano, TX 75074", "coordinates": {"lat": 33.0298, "lng": -96.6839}},
+               {"address": "220 E 3rd Ave, Corsicana, TX 75110", "coordinates": {"lat": 32.0954, "lng": -96.4664}},
+               {"address": "1401 Jane Lane, West, TX 76691", "coordinates": {"lat": 31.8031, "lng": -97.0911}},
+               {"address": "6101 Windhaven Pkwy Ste 145, Plano, TX 75093", "coordinates": {"lat": 33.0789, "lng": -96.8339}},
+               {"address": "2300 W Michigan Ave Suite 7, Midland, TX 79701", "coordinates": {"lat": 31.9973, "lng": -102.0979}},
+               {"address": "3003 Fannin St, Houston, TX 77004", "coordinates": {"lat": 29.7419, "lng": -95.3698}},
+               {"address": "12930 Dairy Ashford Rd Ste 702A, Sugarland, TX 77478", "coordinates": {"lat": 29.6294, "lng": -95.6508}},
+               {"address": "802 W Lampasas Street, Ennis, TX 75119", "coordinates": {"lat": 32.3293, "lng": -96.6264}}
             ]
          },
-         "orthopedic": {
-            type: "Orthopedic",
-            count: 10,
-            description: "Includes Ortho Surgery & Spine services across multiple locations",
-            addresses: [
-               "6407 S. Cooper St #117, Arlington, TX 76001",
-               "3712 W 7th St, Fort Worth, TX 76107",
-               "4812 Roberts St, Greenville, TX 75401",
-               "117 Jane Lane, Hillsboro, TX 76645",
-               "1324 Brown St #100, Waxahachie, TX 75165",
-               "1029 Long Prairie Rd. Ste D, Flower Mound, TX 75022",
-               "6101 Windhaven Pkwy Ste 145, Plano, TX 75093",
-               "2304 W Michigan Ave, Midland, TX 79701",
-               "2700 W Pleasant Run Rd, Lancaster, TX 75146",
-               "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234"
+         {
+            "type": "Orthopedic",
+            "serviceKey": "orthopedic",
+            "count": 10,
+            "description": "Includes Ortho Surgery & Spine services across multiple locations",
+            "locations": [
+               {"address": "6407 S. Cooper St #117, Arlington, TX 76001", "coordinates": {"lat": 32.6554, "lng": -97.1289}},
+               {"address": "3712 W 7th St, Fort Worth, TX 76107", "coordinates": {"lat": 32.7506, "lng": -97.3739}},
+               {"address": "4812 Roberts St, Greenville, TX 75401", "coordinates": {"lat": 33.1273, "lng": -96.1086}},
+               {"address": "117 Jane Lane, Hillsboro, TX 76645", "coordinates": {"lat": 32.0107, "lng": -97.1289}},
+               {"address": "1324 Brown St #100, Waxahachie, TX 75165", "coordinates": {"lat": 32.3865, "lng": -96.8478}},
+               {"address": "1029 Long Prairie Rd. Ste D, Flower Mound, TX 75022", "coordinates": {"lat": 33.0145, "lng": -97.0969}},
+               {"address": "6101 Windhaven Pkwy Ste 145, Plano, TX 75093", "coordinates": {"lat": 33.0789, "lng": -96.8339}},
+               {"address": "2304 W Michigan Ave, Midland, TX 79701", "coordinates": {"lat": 31.9974, "lng": -102.0983}},
+               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}},
+               {"address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234", "coordinates": {"lat": 32.9267, "lng": -96.8906}}
             ]
          },
-         "pain_management": {
-            type: "Pain Management",
-            count: 6,
-            addresses: [
-               "2304 W Michigan Ave, Midland, TX 79701",
-               "1424 Airport Freeway, Suite N, Bedford, TX 76022",
-               "3003 Fannin St, Houston, TX 77004",
-               "117 Jane Lane, Hillsboro, TX 76645",
-               "2700 W Pleasant Run Rd, Lancaster, TX 75146",
-               "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234"
+         {
+            "type": "Pain Management",
+            "serviceKey": "pain_management",
+            "count": 6,
+            "locations": [
+               {"address": "2304 W Michigan Ave, Midland, TX 79701", "coordinates": {"lat": 31.9974, "lng": -102.0983}},
+               {"address": "1424 Airport Freeway, Suite N, Bedford, TX 76022", "coordinates": {"lat": 32.8440, "lng": -97.1228}},
+               {"address": "3003 Fannin St, Houston, TX 77004", "coordinates": {"lat": 29.7419, "lng": -95.3698}},
+               {"address": "117 Jane Lane, Hillsboro, TX 76645", "coordinates": {"lat": 32.0107, "lng": -97.1289}},
+               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}},
+               {"address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234", "coordinates": {"lat": 32.9267, "lng": -96.8906}}
             ]
          },
-         "general_surgery": {
-            type: "General Surgery",
-            count: 3,
-            addresses: [
-               "6407 S. Cooper St #117, Arlington, TX 76001",
-               "1424 Airport Freeway, Suite N, Bedford, TX 76022",
-               "2700 W Pleasant Run Rd, Lancaster, TX 75146"
+         {
+            "type": "General Surgery",
+            "serviceKey": "general_surgery",
+            "count": 3,
+            "locations": [
+               {"address": "6407 S. Cooper St #117, Arlington, TX 76001", "coordinates": {"lat": 32.6554, "lng": -97.1289}},
+               {"address": "1424 Airport Freeway, Suite N, Bedford, TX 76022", "coordinates": {"lat": 32.8440, "lng": -97.1228}},
+               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}}
             ]
          },
-         "plastic_surgery": {
-            type: "Plastic Surgery",
-            count: 2,
-            addresses: [
-               "4211 Cedar Springs Rd, Dallas, TX 75219",
-               "2700 W Pleasant Run Rd, Lancaster, TX 75146"
+         {
+            "type": "Plastic Surgery",
+            "serviceKey": "plastic_surgery",
+            "count": 2,
+            "locations": [
+               {"address": "4211 Cedar Springs Rd, Dallas, TX 75219", "coordinates": {"lat": 32.8089, "lng": -96.8067}},
+               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}}
             ]
          },
-         "podiatry": {
-            type: "Podiatry",
-            count: 2,
-            addresses: [
-               "2700 W Pleasant Run Rd, Lancaster, TX 75146",
-               "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234"
+         {
+            "type": "Podiatry",
+            "serviceKey": "podiatry",
+            "count": 2,
+            "locations": [
+               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}},
+               {"address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234", "coordinates": {"lat": 32.9267, "lng": -96.8906}}
             ]
          },
-         "vascular_surgery": {
-            type: "Vascular Surgery",
-            count: 2,
-            addresses: [
-               "2700 W Pleasant Run Rd, Lancaster, TX 75146",
-               "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234"
+         {
+            "type": "Vascular Surgery",
+            "serviceKey": "vascular_surgery",
+            "count": 2,
+            "locations": [
+               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}},
+               {"address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234", "coordinates": {"lat": 32.9267, "lng": -96.8906}}
             ]
          },
-         "cardiology": {
-            type: "Cardiology",
-            count: 2,
-            addresses: [
-               "221 Regency Parkway #105, Mansfield, TX 76063",
-               "2727 Bolton Boone Drive #112, Desoto, TX 75115"
+         {
+            "type": "Cardiology",
+            "serviceKey": "cardiology",
+            "count": 2,
+            "locations": [
+               {"address": "221 Regency Parkway #105, Mansfield, TX 76063", "coordinates": {"lat": 32.5632, "lng": -97.1417}},
+               {"address": "2727 Bolton Boone Drive #112, Desoto, TX 75115", "coordinates": {"lat": 32.5899, "lng": -96.8570}}
             ]
          },
-         "oncology": {
-            type: "Oncology",
-            count: 2,
-            addresses: [
-               "7777 Forest Ln, Ste B238, Dallas, TX 75230",
-               "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234"
+         {
+            "type": "Oncology",
+            "serviceKey": "oncology",
+            "count": 2,
+            "locations": [
+               {"address": "7777 Forest Ln, Ste B238, Dallas, TX 75230", "coordinates": {"lat": 32.9128, "lng": -96.7678}},
+               {"address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234", "coordinates": {"lat": 32.9267, "lng": -96.8906}}
             ]
          },
-         "chiropractic": {
-            type: "Chiropractic",
-            count: 3,
-            addresses: [
-               "10622 Shiloh Rd, Dallas, TX 75228",
-               "220 E 3rd Ave, Corsicana, TX 75110",
-               "1313 E Frank St, Hillsboro, TX 76645"
+         {
+            "type": "Chiropractic",
+            "serviceKey": "chiropractic",
+            "count": 3,
+            "locations": [
+               {"address": "10622 Shiloh Rd, Dallas, TX 75228", "coordinates": {"lat": 32.8234, "lng": -96.6714}},
+               {"address": "220 E 3rd Ave, Corsicana, TX 75110", "coordinates": {"lat": 32.0954, "lng": -96.4664}},
+               {"address": "1313 E Frank St, Hillsboro, TX 76645", "coordinates": {"lat": 32.0107, "lng": -97.1189}}
             ]
          }
-      };
+      ];
 
 
       // Global variables
@@ -634,17 +654,8 @@
                      lat: position.coords.latitude,
                      lng: position.coords.longitude
                   };
-                  
-                  // Reverse geocode to get address
-                  const geocoder = new google.maps.Geocoder();
-                  geocoder.geocode({ location: userLocation }, (results, status) => {
-                     if (status === 'OK' && results[0]) {
-                        const address = results[0].formatted_address;
-                        document.getElementById('addressInput').value = address;
-                        updateLocationHeader(address);
-                     }
-                  });
-                  
+
+                  // Update results with user's location
                   updateResults();
                },
                (error) => {
@@ -663,7 +674,29 @@
       function initApp() {
          initializeEventListeners();
          initMap();
-         getUserLocation();
+         // Show locations immediately, then try to get user location
+         showDefaultResults();
+         getUserLocationAsync();
+      }
+
+      // Get user location asynchronously without blocking
+      function getUserLocationAsync() {
+         if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+               (position) => {
+                  userLocation = {
+                     lat: position.coords.latitude,
+                     lng: position.coords.longitude
+                  };
+                  // Update results with distances
+                  updateResults();
+               },
+               (error) => {
+                  console.log('Geolocation not available:', error);
+                  // Locations already shown, just continue without distances
+               }
+            );
+         }
       }
 
       // Event listeners setup
@@ -753,7 +786,7 @@
       function hideSuggestions() {
          document.getElementById('addressSuggestions').style.display = 'none';
       }
-      
+
       // Update location header with selected address
       function updateLocationHeader(address) {
          const header = document.getElementById('locationHeader');
@@ -769,7 +802,7 @@
          const input = document.getElementById('addressInput');
          input.value = prediction.description;
          hideSuggestions();
-         
+
          // Update the header to show the selected location
          updateLocationHeader(prediction.description);
 
@@ -838,24 +871,28 @@
          // Filter by location type
          if (currentService && currentService.trim() !== '') {
             // Show only the selected location type
-            const locationData = LOCATION_DATA[currentService];
+            const locationData = LOCATION_DATA.find(data => data.serviceKey === currentService);
             if (locationData) {
-               locations = locationData.addresses.map(address => ({
-                  address: address,
+               locations = locationData.locations.map(loc => ({
+                  address: loc.address,
+                  lat: loc.coordinates.lat,
+                  lng: loc.coordinates.lng,
                   type: locationData.type,
                   description: locationData.description || '',
-                  serviceKey: currentService
+                  serviceKey: locationData.serviceKey
                }));
             }
          } else {
             // Show all locations from all types
-            Object.entries(LOCATION_DATA).forEach(([key, data]) => {
-               data.addresses.forEach(address => {
+            LOCATION_DATA.forEach(data => {
+               data.locations.forEach(loc => {
                   locations.push({
-                     address: address,
+                     address: loc.address,
+                     lat: loc.coordinates.lat,
+                     lng: loc.coordinates.lng,
                      type: data.type,
                      description: data.description || '',
-                     serviceKey: key
+                     serviceKey: data.serviceKey
                   });
                });
             });
@@ -871,60 +908,47 @@
       }
 
       // Display location results
-      async function displayResults(locations) {
+      function displayResults(locations) {
+         console.log('displayResults called with', locations.length, 'locations');
          const container = document.getElementById('clinicResults');
+         console.log('Container element:', container);
+         console.log('Container is null?', container === null);
+         console.log('Container is undefined?', container === undefined);
+         console.log('Container tagName:', container ? container.tagName : 'NO CONTAINER');
+         console.log('Container parent:', container ? container.parentElement : 'NO PARENT');
 
          if (locations.length === 0) {
             container.innerHTML = '<div class="no-results">No locations were found that match your search criteria.</div>';
             return;
          }
 
-         // Geocode all locations and calculate distances
-         const geocoder = new google.maps.Geocoder();
-         const locationsWithCoords = await Promise.all(
-            locations.map(location => 
-               new Promise((resolve) => {
-                  geocoder.geocode({ address: location.address }, (results, status) => {
-                     if (status === 'OK' && results[0]) {
-                        const coords = results[0].geometry.location;
-                        let distance = null;
-                        
-                        if (userLocation) {
-                           distance = calculateDistance(
-                              userLocation.lat,
-                              userLocation.lng,
-                              coords.lat(),
-                              coords.lng()
-                           );
-                        }
-                        
-                        resolve({
-                           ...location,
-                           lat: coords.lat(),
-                           lng: coords.lng(),
-                           distance: distance
-                        });
-                     } else {
-                        resolve({ ...location, distance: null });
-                     }
-                  });
-               })
-            )
-         );
+         // Calculate distances for all locations
+         const locationsWithDistance = locations.map(location => {
+            let distance = null;
+            if (userLocation && location.lat && location.lng) {
+               distance = calculateDistance(
+                  userLocation.lat,
+                  userLocation.lng,
+                  location.lat,
+                  location.lng
+               );
+            }
+            return { ...location, distance };
+         });
 
          // Sort by distance if user location is available
          if (userLocation) {
-            locationsWithCoords.sort((a, b) => {
+            locationsWithDistance.sort((a, b) => {
                if (a.distance === null) return 1;
                if (b.distance === null) return -1;
                return a.distance - b.distance;
             });
          }
 
-         container.innerHTML = locationsWithCoords.map(location => {
+         const htmlContent = locationsWithDistance.map(location => {
             const mapQuery = encodeURIComponent(location.address);
             const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
-            
+
             // Split address into lines for better display
             const addressParts = location.address.split(',');
             const streetAddress = addressParts[0]?.trim() || '';
@@ -932,40 +956,82 @@
 
             return `
                      <div class="loc-map-sec-clinic-card">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 8px;">
-                           <h3 style="color: #0c3666; margin: 0; font-size: 1.1rem; font-weight: 600;">${location.type}</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                           <h3 style="color: #0c3666; margin: 0; font-size: 1.125rem; font-weight: 600; line-height: 1.4;">${location.type}</h3>
+
                            <div style="text-align: right;">
-                              <div style="font-size: 1rem; color: #333; font-weight: 500;">
-                                 ${location.distance !== null ? location.distance.toFixed(1) + ' Miles' : ''}
-                              </div>
-                              <a href="${mapLink}" target="_blank" style="color: #0c3666; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 4px; justify-content: flex-end; margin-top: 4px;">
-                                 <span style="font-size: 18px;">📍</span> Show on map
+                              ${location.distance !== null ? `
+                                 <div style="color: #000; font-size: 1.125rem; font-weight: 400; line-height: 1.4; margin-bottom: 8px;">
+                                    ${location.distance.toFixed(1)} Miles
+                                 </div>
+                              ` : ''}
+
+                              <a href="${mapLink}" target="_blank" style="color: #0c3666; text-decoration: none; font-size: 1rem; display: inline-flex; align-items: center; gap: 6px; font-weight: 400; white-space: nowrap;">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#0c3666" style="flex-shrink: 0;">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                 </svg>
+                                 Show on map
                               </a>
                            </div>
                         </div>
-                        
-                        <div style="margin: 12px 0;">
-                           <div style="font-size: 1rem; color: #333; line-height: 1.5;">
+
+                        <div style="margin: 16px 0;">
+                           <div style="font-size: 1rem; color: #000; line-height: 1.6; font-weight: 400;">
                               ${streetAddress}
                            </div>
-                           <div style="font-size: 1rem; color: #333; line-height: 1.5;">
+                           <div style="font-size: 1rem; color: #000; line-height: 1.6; font-weight: 400;">
                               ${cityStateZip}
                            </div>
                         </div>
-                        
-                        <div style="color: #28a745; font-size: 1rem; margin: 12px 0;">
-                           📞 866-794-9781
+
+                        <div style="color: #28a745; font-size: 1rem; margin: 16px 0; font-weight: 400;">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#28a745" style="vertical-align: middle; margin-right: 6px;">
+                              <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                           </svg>
+                           866-303-6929
                         </div>
-                        
-                        <button style="background-color: #0c3666; color: white; border: none; padding: 12px 20px; width: 100%; cursor: pointer; font-size: 1rem; font-weight: 600; border-radius: 0; margin-top: 10px;" onclick="window.open('${mapLink}', '_blank')">
+
+                        <button style="background-color: #0c3666; color: white; border: none; padding: 14px 20px; width: 100%; cursor: pointer; font-size: 1rem; font-weight: 600; border-radius: 0; margin-top: 12px; letter-spacing: 0.5px;" onclick="window.open('${mapLink}', '_blank')">
                            LOCATION DETAILS
                         </button>
                      </div>
                 `;
          }).join('');
 
-         // Update map with geocoded locations
-         updateMapMarkers(locationsWithCoords);
+         console.log('Generated HTML length:', htmlContent.length);
+         console.log('First 500 chars:', htmlContent.substring(0, 500));
+         container.innerHTML = htmlContent;
+         console.log('innerHTML set, container now has', container.children.length, 'children');
+         console.log('First child HTML:', container.children[0] ? container.children[0].outerHTML.substring(0, 500) : 'No children');
+
+         // Check dimensions and visibility
+         const rect = container.getBoundingClientRect();
+         console.log('Container dimensions:', {
+            width: rect.width,
+            height: rect.height,
+            top: rect.top,
+            left: rect.left
+         });
+         const containerStyle = window.getComputedStyle(container);
+         console.log('Container computed style:', {
+            display: containerStyle.display,
+            visibility: containerStyle.visibility,
+            opacity: containerStyle.opacity,
+            position: containerStyle.position
+         });
+
+         if (container.children[0]) {
+            const childRect = container.children[0].getBoundingClientRect();
+            console.log('First child dimensions:', {
+               width: childRect.width,
+               height: childRect.height,
+               top: childRect.top,
+               left: childRect.left
+            });
+         }
+
+         // Update map with locations
+         updateMapMarkers(locationsWithDistance);
       }
 
       // Update map with location markers
@@ -974,30 +1040,16 @@
          markers.forEach(marker => marker.setMap(null));
          markers = [];
 
-         // Add user location marker if available
+         // Center map on user location if available (without showing marker)
          if (userLocation) {
             map.setCenter(userLocation);
-            const userMarker = new google.maps.Marker({
-               position: userLocation,
-               map: map,
-               title: 'Your Location',
-               icon: {
-                  url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="12" cy="12" r="8" fill="#000" stroke="#fff" stroke-width="2"/>
-                            </svg>
-                        `),
-                  scaledSize: new google.maps.Size(20, 20)
-               }
-            });
-            markers.push(userMarker);
          }
 
          // Add markers for all locations
          locations.forEach(location => {
             if (location.lat && location.lng) {
                const iconPath = CONFIG.ICON_PATHS[location.serviceKey] || 'attached_assets/10_1760719237356.png';
-               
+
                const marker = new google.maps.Marker({
                   position: { lat: location.lat, lng: location.lng },
                   map: map,
@@ -1046,8 +1098,8 @@
       // Show default results on page load
       function showDefaultResults() {
          const defaultLocations = filterClinics();
+         console.log('Filtered locations:', defaultLocations.length, defaultLocations);
          displayResults(defaultLocations);
-         updateMap(defaultLocations);
       }
 
       // Initialize when page loads

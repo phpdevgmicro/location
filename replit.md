@@ -12,7 +12,10 @@ Preferred communication style: Simple, everyday language.
 
 **Technology Stack**: PHP website with JavaScript/Google Maps integration
 - PHP server-side rendering (`index.php` as main entry point)
-- Two CSS files: `custom.css` for component-specific styling and `site.css` for global styles
+- Three CSS files: 
+  - `site.css` - Global site styles (minified)
+  - `custom.css` - Component-specific styling
+  - `locations.css` - Location finder specific styles (flexbox layout fixes)
 - Responsive design patterns using CSS grid and flexbox
 - Google Maps JavaScript API for interactive location mapping
 - Google Places API for address autocomplete
@@ -132,8 +135,18 @@ Preferred communication style: Simple, everyday language.
   - All locations display distance in miles from user's location
   - Results automatically sorted by proximity (nearest first)
   - Map shows all location markers with correct category icons
-  - User location marked with black dot on map
   - Location type filtering updates both map markers and listing
   - Clicking map markers shows info windows with location details and distance
   - Real-time header updates as user types address
   - Geocoding integration for address-to-coordinates conversion
+- ✅ UI Improvements (October 17, 2025):
+  - Removed user location marker from map for cleaner display
+  - Distance now displayed as prominent blue badge in top-right of location cards
+  - "Show on map" link moved below phone number for better card organization
+  
+## Known Issues
+- **Geocoding API Permission Required**: The Google Maps API key needs the Geocoding API enabled to calculate distances and show location coordinates. Without this:
+  - Locations may not load properly
+  - Distance calculations will not work
+  - Map markers may not appear
+  - To fix: Enable the Geocoding API in Google Cloud Console for the API key: AIzaSyBj68ryDqKcMZSC0CC03YOcMXLmIVHqrGE

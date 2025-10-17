@@ -1,0 +1,34 @@
+/* Location Finder Styles - Fix flex layout */
+
+.loc-map-sec-main {
+    display: flex !important;
+    flex-wrap: nowrap !important; /* Prevent wrapping */
+    align-items: flex-start !important;
+}
+
+.loc-map-sec-left {
+    display: block !important;
+    min-height: 300px !important;
+    order: 1 !important; /* Ensure left panel comes first */
+}
+
+.loc-map-sec-right {
+    order: 2 !important; /* Map panel comes second */
+}
+
+.loc-map-sec-clinic-card {
+    background: white !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    padding: 16px !important;
+    margin-bottom: 16px !important;
+    display: block !important;
+    border: 1px solid #e0e0e0 !important;
+    visibility: visible !important;
+}
+
+#clinicResults {
+    display: block !important;
+    min-height: 200px !important;
+    visibility: visible !important;
+}

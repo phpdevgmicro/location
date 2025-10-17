@@ -7,3 +7,7 @@
 [x] 7. Improve location card layout
 [x] 8. Document all changes in replit.md
 [x] 9. Fix legend icon backgrounds and replace with CSS dots
+[x] 10. Remove user location marker from map
+[x] 11. Make distance display more prominent with blue badge design
+[x] 12. Add fallback for geocoding errors
+[x] 13. Document geocoding API permission issue
