@@ -198,11 +198,12 @@
       }
 
       .loc-map-sec-clinic-card {
-         padding: 1rem;
-         border: 1px solid #ccc;
-         margin-bottom: 0.75rem;
-         border-radius: 4px;
-         background-color: #f9f9f9;
+         padding: 1.25rem;
+         border: 1px solid #d0d0d0;
+         margin-bottom: 1rem;
+         border-radius: 0;
+         background-color: #ffffff;
+         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
 
       .loc-map-sec-header {
@@ -376,7 +377,7 @@
 </head>
 
 <body>
-   <?php include "../header-main.php"; ?>
+   <?php include "header-main.php"; ?>
 
    <section class="loc-page-wrapper">
       <h1 class="loc-page-header open-sans-regular">Locations</h1>
@@ -425,30 +426,34 @@
       </div>
    </div>
 
-   <div class="loc-map-sec-header">
+   <div class="loc-map-sec-header" id="locationHeader">
       Showing Locations Near:
    </div>
 
    <div class="legend-bar">
       <div class="legend-item">
-         <img src="attached_assets/5_1760719237353.png" alt="U" style="width: 24px; height: 24px; margin-right: 8px;">
+         <img src="attached_assets/5_1760719237353.png" alt="" style="width: 20px; height: 20px; margin-right: 6px;">
          <span>Urgent Care</span>
       </div>
       <div class="legend-item">
-         <img src="attached_assets/6_1760719237353.png" alt="H" style="width: 24px; height: 24px; margin-right: 8px;">
+         <img src="attached_assets/6_1760719237353.png" alt="" style="width: 20px; height: 20px; margin-right: 6px;">
          <span>Hospital</span>
       </div>
       <div class="legend-item">
-         <img src="attached_assets/7_1760719237354.png" alt="S" style="width: 24px; height: 24px; margin-right: 8px;">
-         <span>Specialist</span>
+         <img src="attached_assets/7_1760719237354.png" alt="" style="width: 20px; height: 20px; margin-right: 6px;">
+         <span>Specialty Care</span>
       </div>
       <div class="legend-item">
-         <img src="attached_assets/8_1760719237355.png" alt="P" style="width: 24px; height: 24px; margin-right: 8px;">
+         <img src="attached_assets/8_1760719237355.png" alt="" style="width: 20px; height: 20px; margin-right: 6px;">
          <span>Primary Care</span>
       </div>
       <div class="legend-item">
-         <img src="attached_assets/9_1760719237356.png" alt="" style="width: 24px; height: 24px; margin-right: 8px;">
-         <span>All Locations</span>
+         <img src="attached_assets/9_1760719237356.png" alt="" style="width: 20px; height: 20px; margin-right: 6px;">
+         <span>Infusions</span>
+      </div>
+      <div class="legend-item">
+         <img src="attached_assets/10_1760719237356.png" alt="" style="width: 20px; height: 20px; margin-right: 6px;">
+         <span>All Other Locations</span>
       </div>
    </div>
 
@@ -702,12 +707,25 @@
       function hideSuggestions() {
          document.getElementById('addressSuggestions').style.display = 'none';
       }
+      
+      // Update location header with selected address
+      function updateLocationHeader(address) {
+         const header = document.getElementById('locationHeader');
+         if (address && address.trim() !== '') {
+            header.textContent = `Showing Locations Near: ${address}`;
+         } else {
+            header.textContent = 'Showing Locations Near:';
+         }
+      }
 
       // Handle address selection
       function selectAddress(prediction) {
          const input = document.getElementById('addressInput');
          input.value = prediction.description;
          hideSuggestions();
+         
+         // Update the header to show the selected location
+         updateLocationHeader(prediction.description);
 
          const request = {
             placeId: prediction.place_id,
@@ -816,18 +834,40 @@
          container.innerHTML = locations.map(location => {
             const mapQuery = encodeURIComponent(location.address);
             const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+            
+            // Split address into lines for better display
+            const addressParts = location.address.split(',');
+            const streetAddress = addressParts[0]?.trim() || '';
+            const cityStateZip = addressParts.slice(1).join(',').trim() || '';
 
             return `
-                     <div class="loc-map-sec-clinic-card" style="cursor: pointer;" onclick="window.open('${mapLink}', '_blank')">
-                        <div style="display:flex; justify-content:space-between; align-items:center">
-                           <h3 style="color: #0c3666; margin: 0;">${location.type}</h3>
-                           <span style="font-size: 0.9rem; color: #666;">
-                              ${location.distance ? location.distance.toFixed(1) + ' Miles' : ''}
-                           </span>
+                     <div class="loc-map-sec-clinic-card">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 8px;">
+                           <h3 style="color: #0c3666; margin: 0; font-size: 1.1rem; font-weight: 600;">${location.type}</h3>
+                           <div style="text-align: right;">
+                              <div style="font-size: 1rem; color: #333; font-weight: 500;">
+                                 ${location.distance ? location.distance.toFixed(1) + ' Miles' : ''}
+                              </div>
+                              <a href="${mapLink}" target="_blank" style="color: #0c3666; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 4px; justify-content: flex-end; margin-top: 4px;">
+                                 <span style="font-size: 18px;">📍</span> Show on map
+                              </a>
+                           </div>
                         </div>
-                        <p style="margin: 10px 0;"><strong>Address:</strong><br>${location.address}</p>
-                        ${location.description ? `<p style="margin: 10px 0; font-size: 0.9rem; color: #666;">${location.description}</p>` : ''}
-                        <button style="background-color: #0c3666; color: white; border: none; padding: 10px 20px; width: 100%; cursor: pointer; font-size: 1rem; border-radius: 4px; margin-top: 10px;" onclick="event.stopPropagation(); window.open('${mapLink}', '_blank')">
+                        
+                        <div style="margin: 12px 0;">
+                           <div style="font-size: 1rem; color: #333; line-height: 1.5;">
+                              ${streetAddress}
+                           </div>
+                           <div style="font-size: 1rem; color: #333; line-height: 1.5;">
+                              ${cityStateZip}
+                           </div>
+                        </div>
+                        
+                        <div style="color: #28a745; font-size: 1rem; margin: 12px 0;">
+                           📞 866-794-9781
+                        </div>
+                        
+                        <button style="background-color: #0c3666; color: white; border: none; padding: 12px 20px; width: 100%; cursor: pointer; font-size: 1rem; font-weight: 600; border-radius: 0; margin-top: 10px;" onclick="window.open('${mapLink}', '_blank')">
                            LOCATION DETAILS
                         </button>
                      </div>

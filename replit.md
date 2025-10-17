@@ -1,6 +1,6 @@
 # Overview
 
-This is a static website project for a medical practice or healthcare organization with multiple locations across Texas. The site displays information about various medical facilities including Primary Care Offices, Orthopedic centers, and Pain Management clinics. The project consists of basic HTML/CSS styling with structured data files containing location information for 30+ medical facilities across the state.
+This is a PHP-based medical location finder website for a healthcare organization ("Specialty Care Clinics") with multiple locations across Texas. The site features an interactive Google Maps-powered location search tool that allows users to find nearby medical facilities by address, filter by location type, and adjust search radius. The project displays information for 30+ medical facilities including Primary Care Offices, Orthopedic centers, Pain Management clinics, and other specialty services.
 
 # User Preferences
 
@@ -10,17 +10,51 @@ Preferred communication style: Simple, everyday language.
 
 ## Frontend Architecture
 
-**Technology Stack**: Static HTML/CSS website
-- Pure CSS implementation without JavaScript frameworks
+**Technology Stack**: PHP website with JavaScript/Google Maps integration
+- PHP server-side rendering (`index.php` as main entry point)
 - Two CSS files: `custom.css` for component-specific styling and `site.css` for global styles
-- Responsive design patterns using CSS grid and flexbox (evident from class names like `.gd-g--center`)
-- Fixed positioning navigation for persistent header access
+- Responsive design patterns using CSS grid and flexbox
+- Google Maps JavaScript API for interactive location mapping
+- Google Places API for address autocomplete
+- Fixed positioning navigation header
 
 **Design Decisions**:
-- **Problem**: Need for lightweight, fast-loading medical practice website
-- **Solution**: Static HTML/CSS without heavy frameworks
-- **Rationale**: Reduces load times, improves accessibility, and simplifies maintenance for content-focused site
-- **Trade-offs**: Limited interactivity but gains in performance and simplicity
+- **Problem**: Need for interactive location finder with real-time search and mapping
+- **Solution**: PHP-based site with Google Maps integration and JavaScript for dynamic interactions
+- **Rationale**: Enables address search, distance filtering, and visual map display while maintaining server-side simplicity
+- **Trade-offs**: Requires JavaScript enabled, API key management, but gains rich interactive features
+
+## Location Finder Features
+
+**Interactive Search & Filtering**:
+- Address autocomplete using Google Places API
+- Real-time location header update displaying selected address (e.g., "Showing Locations Near: Dallas, TX")
+- Location type filtering (Primary Care, Orthopedic, Pain Management, General Surgery, Plastic Surgery, Podiatry, Vascular Surgery, Cardiology, Oncology, Chiropractic)
+- Distance-based search radius (5mi, 10mi, 20mi, 50mi options)
+- Dynamic results display with distance calculations using Haversine formula
+
+**Map Integration**:
+- Interactive Google Maps display centered on Dallas, TX by default
+- Custom marker icons for different location types:
+  - `5_1760719237353.png` - Urgent Care (red marker)
+  - `6_1760719237353.png` - Hospital (blue marker)
+  - `7_1760719237354.png` - Specialty Care (purple marker)
+  - `8_1760719237355.png` - Primary Care (green marker)
+  - `9_1760719237356.png` - Infusions (teal marker)
+  - `10_1760719237356.png` - All Other Locations (light blue circle marker)
+- User location marker displayed when address is selected
+- Map legend showing all location types with icons
+
+**Location Display Cards** (Updated October 2025):
+- Clean white card design with subtle shadow (`box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)`)
+- Location name and type (1.1rem, font-weight: 600, color: #0c3666)
+- Distance information from user's location (1rem, font-weight: 500)
+- Split address display for better readability:
+  - Street address on first line
+  - City, State, ZIP on second line
+- Phone number in green color (📞 866-794-9781)
+- "Show on map" link with map pin emoji icon
+- "LOCATION DETAILS" button (full width, #0c3666 background, no border-radius)
 
 ## Data Structure
 
@@ -74,13 +108,18 @@ Preferred communication style: Simple, everyday language.
 - No external APIs or services for data retrieval
 
 ## Third-party Services
-- No evidence of external integrations (analytics, maps APIs, booking systems)
-- No database connections detected
+- **Google Maps JavaScript API** - Interactive map display and location visualization
+- **Google Places API** - Address autocomplete and geocoding functionality
+- **Google Analytics** - Traffic monitoring (Tag ID: G-PV6VBESTRG)
+- No database connections (using static JSON data)
 - No authentication services implemented
 
-## Potential Integration Points
-The current architecture could benefit from:
-- Google Maps API integration for location visualization
-- Analytics service (Google Analytics, Plausible) for traffic monitoring
-- Content Management System for easier location data updates
-- Appointment booking system integration
+## Recent Updates (October 2025)
+- ✅ Implemented dynamic location header that updates when user selects an address
+- ✅ Updated map legend with correct marker icons matching all location types
+- ✅ Redesigned location listing cards with improved typography and layout
+- ✅ Added "Show on map" links with map pin icons
+- ✅ Split address display for better readability
+- ✅ Corrected marker icon assignments:
+  - Infusions now uses teal marker (9_1760719237356.png)
+  - All Other Locations uses circular marker (10_1760719237356.png)
