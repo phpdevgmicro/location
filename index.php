@@ -254,6 +254,15 @@
          color: #333;
       }
 
+      .legend-icon {
+         width: 20px;
+         height: 20px;
+         margin-right: 8px;
+         background-color: white;
+         border-radius: 50%;
+         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+         object-fit: contain;
+      }
 
       .legend-dot {
          width: 14px;
@@ -432,27 +441,27 @@
 
    <div class="legend-bar">
       <div class="legend-item">
-         <img src="attached_assets/5_1760719237353.png" alt="" style="width: 20px; height: 20px; margin-right: 6px;">
+         <img src="attached_assets/5_1760719237353.png" alt="" class="legend-icon">
          <span>Urgent Care</span>
       </div>
       <div class="legend-item">
-         <img src="attached_assets/6_1760719237353.png" alt="" style="width: 20px; height: 20px; margin-right: 6px;">
+         <img src="attached_assets/6_1760719237353.png" alt="" class="legend-icon">
          <span>Hospital</span>
       </div>
       <div class="legend-item">
-         <img src="attached_assets/7_1760719237354.png" alt="" style="width: 20px; height: 20px; margin-right: 6px;">
+         <img src="attached_assets/7_1760719237354.png" alt="" class="legend-icon">
          <span>Specialty Care</span>
       </div>
       <div class="legend-item">
-         <img src="attached_assets/8_1760719237355.png" alt="" style="width: 20px; height: 20px; margin-right: 6px;">
+         <img src="attached_assets/8_1760719237355.png" alt="" class="legend-icon">
          <span>Primary Care</span>
       </div>
       <div class="legend-item">
-         <img src="attached_assets/9_1760719237356.png" alt="" style="width: 20px; height: 20px; margin-right: 6px;">
+         <img src="attached_assets/9_1760719237356.png" alt="" class="legend-icon">
          <span>Infusions</span>
       </div>
       <div class="legend-item">
-         <img src="attached_assets/10_1760719237356.png" alt="" style="width: 20px; height: 20px; margin-right: 6px;">
+         <img src="attached_assets/10_1760719237356.png" alt="" class="legend-icon">
          <span>All Other Locations</span>
       </div>
    </div>
@@ -616,11 +625,45 @@
       let currentDistance = CONFIG.DEFAULT_DISTANCE;
       let currentService = '';
 
+      // Get user's location on page load
+      function getUserLocation() {
+         if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+               (position) => {
+                  userLocation = {
+                     lat: position.coords.latitude,
+                     lng: position.coords.longitude
+                  };
+                  
+                  // Reverse geocode to get address
+                  const geocoder = new google.maps.Geocoder();
+                  geocoder.geocode({ location: userLocation }, (results, status) => {
+                     if (status === 'OK' && results[0]) {
+                        const address = results[0].formatted_address;
+                        document.getElementById('addressInput').value = address;
+                        updateLocationHeader(address);
+                     }
+                  });
+                  
+                  updateResults();
+               },
+               (error) => {
+                  console.log('Geolocation error:', error);
+                  // Show default results even if geolocation fails
+                  showDefaultResults();
+               }
+            );
+         } else {
+            // Browser doesn't support geolocation
+            showDefaultResults();
+         }
+      }
+
       // Initialize application
       function initApp() {
          initializeEventListeners();
          initMap();
-         showDefaultResults();
+         getUserLocation();
       }
 
       // Event listeners setup
@@ -666,6 +709,9 @@
       function handleAddressInput() {
          const input = document.getElementById('addressInput');
          const query = input.value.trim();
+
+         // Update header as user types
+         updateLocationHeader(query);
 
          if (query.length < 3) {
             hideSuggestions();
@@ -797,7 +843,8 @@
                locations = locationData.addresses.map(address => ({
                   address: address,
                   type: locationData.type,
-                  description: locationData.description || ''
+                  description: locationData.description || '',
+                  serviceKey: currentService
                }));
             }
          } else {
@@ -807,7 +854,8 @@
                   locations.push({
                      address: address,
                      type: data.type,
-                     description: data.description || ''
+                     description: data.description || '',
+                     serviceKey: key
                   });
                });
             });
@@ -823,7 +871,7 @@
       }
 
       // Display location results
-      function displayResults(locations) {
+      async function displayResults(locations) {
          const container = document.getElementById('clinicResults');
 
          if (locations.length === 0) {
@@ -831,7 +879,49 @@
             return;
          }
 
-         container.innerHTML = locations.map(location => {
+         // Geocode all locations and calculate distances
+         const geocoder = new google.maps.Geocoder();
+         const locationsWithCoords = await Promise.all(
+            locations.map(location => 
+               new Promise((resolve) => {
+                  geocoder.geocode({ address: location.address }, (results, status) => {
+                     if (status === 'OK' && results[0]) {
+                        const coords = results[0].geometry.location;
+                        let distance = null;
+                        
+                        if (userLocation) {
+                           distance = calculateDistance(
+                              userLocation.lat,
+                              userLocation.lng,
+                              coords.lat(),
+                              coords.lng()
+                           );
+                        }
+                        
+                        resolve({
+                           ...location,
+                           lat: coords.lat(),
+                           lng: coords.lng(),
+                           distance: distance
+                        });
+                     } else {
+                        resolve({ ...location, distance: null });
+                     }
+                  });
+               })
+            )
+         );
+
+         // Sort by distance if user location is available
+         if (userLocation) {
+            locationsWithCoords.sort((a, b) => {
+               if (a.distance === null) return 1;
+               if (b.distance === null) return -1;
+               return a.distance - b.distance;
+            });
+         }
+
+         container.innerHTML = locationsWithCoords.map(location => {
             const mapQuery = encodeURIComponent(location.address);
             const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
             
@@ -846,7 +936,7 @@
                            <h3 style="color: #0c3666; margin: 0; font-size: 1.1rem; font-weight: 600;">${location.type}</h3>
                            <div style="text-align: right;">
                               <div style="font-size: 1rem; color: #333; font-weight: 500;">
-                                 ${location.distance ? location.distance.toFixed(1) + ' Miles' : ''}
+                                 ${location.distance !== null ? location.distance.toFixed(1) + ' Miles' : ''}
                               </div>
                               <a href="${mapLink}" target="_blank" style="color: #0c3666; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 4px; justify-content: flex-end; margin-top: 4px;">
                                  <span style="font-size: 18px;">📍</span> Show on map
@@ -873,16 +963,18 @@
                      </div>
                 `;
          }).join('');
+
+         // Update map with geocoded locations
+         updateMapMarkers(locationsWithCoords);
       }
 
-      // Update map with filtered locations
-      function updateMap(locations) {
+      // Update map with location markers
+      function updateMapMarkers(locations) {
          // Clear existing markers
          markers.forEach(marker => marker.setMap(null));
          markers = [];
 
-         // For now, just show the map centered on Dallas
-         // TODO: Add geocoding for addresses to show markers
+         // Add user location marker if available
          if (userLocation) {
             map.setCenter(userLocation);
             const userMarker = new google.maps.Marker({
@@ -900,6 +992,55 @@
             });
             markers.push(userMarker);
          }
+
+         // Add markers for all locations
+         locations.forEach(location => {
+            if (location.lat && location.lng) {
+               const iconPath = CONFIG.ICON_PATHS[location.serviceKey] || 'attached_assets/10_1760719237356.png';
+               
+               const marker = new google.maps.Marker({
+                  position: { lat: location.lat, lng: location.lng },
+                  map: map,
+                  title: location.type + ' - ' + location.address,
+                  icon: {
+                     url: iconPath,
+                     scaledSize: new google.maps.Size(32, 32)
+                  }
+               });
+
+               // Add info window
+               const infoWindow = new google.maps.InfoWindow({
+                  content: `
+                     <div style="padding: 8px;">
+                        <h4 style="margin: 0 0 8px 0; color: #0c3666;">${location.type}</h4>
+                        <p style="margin: 4px 0;">${location.address}</p>
+                        ${location.distance !== null ? `<p style="margin: 4px 0; font-weight: 500;">${location.distance.toFixed(1)} Miles</p>` : ''}
+                     </div>
+                  `
+               });
+
+               marker.addListener('click', () => {
+                  infoWindow.open(map, marker);
+               });
+
+               markers.push(marker);
+            }
+         });
+
+         // Fit map to show all markers
+         if (markers.length > 0) {
+            const bounds = new google.maps.LatLngBounds();
+            markers.forEach(marker => {
+               bounds.extend(marker.getPosition());
+            });
+            map.fitBounds(bounds);
+         }
+      }
+
+      // Update map with filtered locations (legacy function for compatibility)
+      function updateMap(locations) {
+         // This function is kept for compatibility but does nothing
+         // The actual map update happens in displayResults via updateMapMarkers
       }
 
       // Show default results on page load

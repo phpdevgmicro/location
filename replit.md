@@ -123,3 +123,17 @@ Preferred communication style: Simple, everyday language.
 - ✅ Corrected marker icon assignments:
   - Infusions now uses teal marker (9_1760719237356.png)
   - All Other Locations uses circular marker (10_1760719237356.png)
+- ✅ Fixed legend icon display issues (October 17, 2025):
+  - Replaced PNG icons with CSS-styled clean colored circles
+  - All legend items display without background color artifacts
+  - Consistent styling across all location types using `.legend-icon` CSS class with white background and shadow
+- ✅ Auto-location detection and proximity features (October 17, 2025):
+  - Browser geolocation automatically detects user's location on page load
+  - All locations display distance in miles from user's location
+  - Results automatically sorted by proximity (nearest first)
+  - Map shows all location markers with correct category icons
+  - User location marked with black dot on map
+  - Location type filtering updates both map markers and listing
+  - Clicking map markers shows info windows with location details and distance
+  - Real-time header updates as user types address
+  - Geocoding integration for address-to-coordinates conversion
