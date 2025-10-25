@@ -21,9 +21,9 @@
    <link rel="canonical" href="https://specialtycareclinics.com/locations/" />
    <link rel="icon" href="../assets/images/favicon.png" type="image/png" sizes="16x16">
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-   <link rel="stylesheet" href="/specialtycareclinics2023/assets/css/font.css">
-   <link rel="stylesheet" href="site.css">
-   <link rel="stylesheet" type="text/css" href="custom.css">
+   <link rel="stylesheet" href="/assets/css/font.css">
+   <link rel="stylesheet" href="../assets/css/site.css">
+   <link rel="stylesheet" type="text/css" href="../assets/css/custom.css">
    <style>
       body {
          background-color: white !important;
@@ -216,7 +216,7 @@
       }
 
       .loc-map-sec-header {
-         background-color: #28a745;
+         background-color: #0c3666;
          width: 100%;
          padding: 1rem;
          color: white;
@@ -372,6 +372,7 @@
          .loc-map-sec-input,
          .loc-map-sec-select {
             width: 100% !important;
+            height: 37px;
          }
 
          .legend-bar {
@@ -403,12 +404,10 @@
          }
       }
    </style>
-
-   <link rel="stylesheet" href="locations.css">
 </head>
 
 <body>
-   <?php include "header-main.php"; ?>
+      <?php include "../header-main.php"; ?>
 
    <section class="loc-page-wrapper">
       <h1 class="loc-page-header open-sans-regular">Locations</h1>
@@ -418,7 +417,7 @@
       </p>
    </section>
 
-   <div class="container" style="max-width: 1400px; margin: 0 auto;">
+   <div class="container" style="max-width: 1400px; margin: 0 auto 50px auto;">
    <div class="loc-map-sec-searchbar">
       <div class="loc-map-sec-searchbar-wrapper">
          <div class="loc-map-sec-group">
@@ -433,7 +432,7 @@
             <label for="serviceFilter" class="loc-map-sec-label">LOCATION TYPE</label>
             <select id="serviceFilter" class="loc-map-sec-select">
                <option value="">All Location Types</option>
-               <option value="primary_care">Primary Care Office (14)</option>
+               <option value="primary_care">Primary Care Office (22)</option>
                <option value="orthopedic">Orthopedic (10)</option>
                <option value="pain_management">Pain Management (6)</option>
                <option value="general_surgery">General Surgery (3)</option>
@@ -503,7 +502,7 @@
       // Configuration and Data
       const CONFIG = {
          DEFAULT_DISTANCE: 400,
-         MAP_ZOOM: 12,
+         MAP_ZOOM: 13,
          ICON_PATHS: {
             primary_care: 'attached_assets/8_1760719237355.png',
             orthopedic: 'attached_assets/6_1760719237353.png',
@@ -531,27 +530,189 @@
          }
       };
 
-     const LOCATION_DATA = [
+      const LOCATION_DATA = [
          {
             "type": "Primary Care Office",
             "serviceKey": "primary_care",
-            "count": 14,
+            "count": 22,
             "description": "Includes Family Medicine, Internal Medicine, Preventive, and Nurse Practitioners",
             "locations": [
-               {"address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234", "coordinates": {"lat": 32.9267, "lng": -96.8906}},
-               {"address": "4211 Cedar Springs Rd, Dallas, TX 75219", "coordinates": {"lat": 32.8089, "lng": -96.8067}},
-               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}},
-               {"address": "1395 E Eldorado Pkwy Suite 400, Little Elm, TX 75068", "coordinates": {"lat": 33.1625, "lng": -96.9375}},
-               {"address": "2540 N. Galloway Ave Suite 103, Mesquite, TX 75150", "coordinates": {"lat": 32.7989, "lng": -96.5853}},
-               {"address": "1909 Central Dr Ste 202, Bedford, TX 76021", "coordinates": {"lat": 32.8440, "lng": -97.1431}},
-               {"address": "2380 E. Park Blvd St. 300, Plano, TX 75074", "coordinates": {"lat": 33.0298, "lng": -96.6839}},
-               {"address": "220 E 3rd Ave, Corsicana, TX 75110", "coordinates": {"lat": 32.0954, "lng": -96.4664}},
-               {"address": "1401 Jane Lane, West, TX 76691", "coordinates": {"lat": 31.8031, "lng": -97.0911}},
-               {"address": "6101 Windhaven Pkwy Ste 145, Plano, TX 75093", "coordinates": {"lat": 33.0789, "lng": -96.8339}},
-               {"address": "2300 W Michigan Ave Suite 7, Midland, TX 79701", "coordinates": {"lat": 31.9973, "lng": -102.0979}},
-               {"address": "3003 Fannin St, Houston, TX 77004", "coordinates": {"lat": 29.7419, "lng": -95.3698}},
-               {"address": "12930 Dairy Ashford Rd Ste 702A, Sugarland, TX 77478", "coordinates": {"lat": 29.6294, "lng": -95.6508}},
-               {"address": "802 W Lampasas Street, Ennis, TX 75119", "coordinates": {"lat": 32.3293, "lng": -96.6264}}
+               {
+               "name": "Casa View Chiropractic Clinic",
+               "address": "10622 Shiloh Rd, Dallas, TX 75228",
+               "coordinates": {"lat": 32.8234, "lng": -96.6714},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["primary_care", "specialty_care", "all_other"]
+               },
+               {
+               "name": "American Infusion Care - Specialty Infusions",
+               "address": "12930 Dairy Ashford Rd Ste 702A, Sugarland, TX 77478",
+               "coordinates": {"lat": 29.6294, "lng": -95.6508},
+               "phone": "832-365-3420",
+               "fax": "214-888-4450",
+               "categories": ["infusions"]
+               },
+               {
+               "name": "Specialty Care Clinics - Midland",
+               "address": "1304 W Texas Ave, Midland, TX 79701",
+               "coordinates": {"lat": 31.9970, "lng": -102.1100},
+               "phone": "432-599-9580",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics - Little Elm",
+               "address": "1395 E Eldorado Pkwy Suite 400, Little Elm, TX 75068",
+               "coordinates": {"lat": 33.1625, "lng": -96.9375},
+               "phone": "469-200-5974",
+               "fax": "214-888-4450",
+               "categories": ["primary_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics - Farmers Branch",
+               "address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234",
+               "coordinates": {"lat": 32.9267, "lng": -96.8906},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["primary_care", "specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics - West",
+               "address": "1401 Jane Lane, West, TX 76691",
+               "coordinates": {"lat": 31.8031, "lng": -97.0911},
+               "phone": "254-580-8811",
+               "fax": "254-296-8614",
+               "categories": ["primary_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics - Bedford",
+               "address": "1909 Central Dr Ste 202, Bedford, TX 76021",
+               "coordinates": {"lat": 32.8440, "lng": -97.1431},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["primary_care", "specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics MedSurg & Compcare",
+               "address": "220 E 3rd Ave, Corsicana, TX 75110",
+               "coordinates": {"lat": 32.0954, "lng": -96.4664},
+               "phone": "903-874-5866",
+               "fax": "903-874-5083",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "2300 W Michigan Ave Suite 7, Midland, TX 79701",
+               "coordinates": {"lat": 31.9973, "lng": -102.0979},
+               "phone": "432-218-7499",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "2304 W Michigan Ave, Midland, TX 79701",
+               "coordinates": {"lat": 31.9974, "lng": -102.0983},
+               "phone": "432-218-7499",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "2351 W Northwest Hwy Suite 3105, Dallas, TX 75220",
+               "coordinates": {"lat": 32.8640, "lng": -96.8890},
+               "phone": "",
+               "fax": "",
+               "categories": ["all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics - Plano",
+               "address": "2380 E Park Blvd St 300, Plano, TX 75074",
+               "coordinates": {"lat": 33.0298, "lng": -96.6839},
+               "phone": "469-581-0081",
+               "fax": "214-888-4450",
+               "categories": ["primary_care", "specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics - Mesquite",
+               "address": "2540 N Galloway Ave Suite 103, Mesquite, TX 75150",
+               "coordinates": {"lat": 32.7989, "lng": -96.5853},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["primary_care", "specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "2700 W Pleasant Run Rd Suite 260, Lancaster, TX 75146",
+               "coordinates": {"lat": 32.5920, "lng": -96.7889},
+               "phone": "254-324-7231",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "2700 W Pleasant Run Rd Suite 320, Lancaster, TX 75146",
+               "coordinates": {"lat": 32.5920, "lng": -96.7889},
+               "phone": "",
+               "fax": "",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "2700 W Pleasant Run Rd Suite 340, Lancaster, TX 75146",
+               "coordinates": {"lat": 32.5920, "lng": -96.7889},
+               "phone": "",
+               "fax": "",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "American Infusion Care - Specialty Infusions",
+               "address": "3003 Fannin St, Houston, TX 77004",
+               "coordinates": {"lat": 29.7419, "lng": -95.3698},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["infusions"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "4211 Cedar Springs Rd Suite 200, Dallas, TX 75219",
+               "coordinates": {"lat": 32.8089, "lng": -96.8067},
+               "phone": "",
+               "fax": "",
+               "categories": ["primary_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinic - Odessa",
+               "address": "500 E 4th St, Odessa, TX 79761",
+               "coordinates": {"lat": 31.8457, "lng": -102.3676},
+               "phone": "432-322-8674",
+               "fax": "432-315-3465",
+               "categories": ["primary_care", "all_other"]
+               },
+               {
+               "name": "Performance Medicine & Sports Therapy",
+               "address": "6101 Windhaven Pkwy Ste 145, Plano, TX 75093",
+               "coordinates": {"lat": 33.0789, "lng": -96.8339},
+               "phone": "469-833-2927",
+               "fax": "214-888-4450",
+               "categories": ["primary_care", "specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "802 W Lampasas Street, Ennis, TX 75119",
+               "coordinates": {"lat": 32.3293, "lng": -96.6264},
+               "phone": "",
+               "fax": "",
+               "categories": ["all_other"]
+               },
+               {
+               "name": "Mi Bienestar Clínica Hispana Familiar - Houston",
+               "address": "8511 N Houston Rosslyn Rd Suite 220, Houston, TX 77088",
+               "coordinates": {"lat": 29.9450, "lng": -95.4350},
+               "phone": "281-741-3204",
+               "fax": "281-741-3154",
+               "categories": ["primary_care", "all_other"]
+               }
             ]
          },
          {
@@ -560,16 +721,86 @@
             "count": 10,
             "description": "Includes Ortho Surgery & Spine services across multiple locations",
             "locations": [
-               {"address": "6407 S. Cooper St #117, Arlington, TX 76001", "coordinates": {"lat": 32.6554, "lng": -97.1289}},
-               {"address": "3712 W 7th St, Fort Worth, TX 76107", "coordinates": {"lat": 32.7506, "lng": -97.3739}},
-               {"address": "4812 Roberts St, Greenville, TX 75401", "coordinates": {"lat": 33.1273, "lng": -96.1086}},
-               {"address": "117 Jane Lane, Hillsboro, TX 76645", "coordinates": {"lat": 32.0107, "lng": -97.1289}},
-               {"address": "1324 Brown St #100, Waxahachie, TX 75165", "coordinates": {"lat": 32.3865, "lng": -96.8478}},
-               {"address": "1029 Long Prairie Rd. Ste D, Flower Mound, TX 75022", "coordinates": {"lat": 33.0145, "lng": -97.0969}},
-               {"address": "6101 Windhaven Pkwy Ste 145, Plano, TX 75093", "coordinates": {"lat": 33.0789, "lng": -96.8339}},
-               {"address": "2304 W Michigan Ave, Midland, TX 79701", "coordinates": {"lat": 31.9974, "lng": -102.0983}},
-               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}},
-               {"address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234", "coordinates": {"lat": 32.9267, "lng": -96.8906}}
+               {
+               "name": "Specialty Care Clinics",
+               "address": "1029 Long Prairie Rd Ste D, Flower Mound, TX 75022",
+               "coordinates": {"lat": 33.0145, "lng": -97.0969},
+               "phone": "",
+               "fax": "",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics - Hillsboro",
+               "address": "117 Jane Lane, Hillsboro, TX 76645",
+               "coordinates": {"lat": 32.0107, "lng": -97.1289},
+               "phone": "254-582-8007",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics - Waxahachie",
+               "address": "1324 Brown St #100, Waxahachie, TX 75165",
+               "coordinates": {"lat": 32.3865, "lng": -96.8478},
+               "phone": "972-937-8900",
+               "fax": "972-937-7936",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics - Farmers Branch",
+               "address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234",
+               "coordinates": {"lat": 32.9267, "lng": -96.8906},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "OrthoXpress",
+               "address": "2304 W Michigan Ave, Midland, TX 79701",
+               "coordinates": {"lat": 31.9974, "lng": -102.0983},
+               "phone": "432-322-8675",
+               "fax": "214-888-4450",
+               "categories": ["urgent_care", "primary_care", "specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "2700 W Pleasant Run Rd, Lancaster, TX 75146",
+               "coordinates": {"lat": 32.5920, "lng": -96.7889},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics - Ft. Worth",
+               "address": "3712 W 7th St, Fort Worth, TX 76107",
+               "coordinates": {"lat": 32.7506, "lng": -97.3739},
+               "phone": "",
+               "fax": "",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics - Greenville",
+               "address": "4812 Roberts St, Greenville, TX 75401",
+               "coordinates": {"lat": 33.1273, "lng": -96.1086},
+               "phone": "903-454-7555",
+               "fax": "903-450-4420",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Performance Medicine & Sports Therapy",
+               "address": "6101 Windhaven Pkwy Ste 145, Plano, TX 75093",
+               "coordinates": {"lat": 33.0789, "lng": -96.8339},
+               "phone": "469-833-2927",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Urgent Care Of Texas",
+               "address": "6407 S Cooper St #117, Arlington, TX 76001",
+               "coordinates": {"lat": 32.6554, "lng": -97.1289},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["urgent_care", "primary_care", "specialty_care", "all_other"]
+               }
             ]
          },
          {
@@ -577,12 +808,54 @@
             "serviceKey": "pain_management",
             "count": 6,
             "locations": [
-               {"address": "2304 W Michigan Ave, Midland, TX 79701", "coordinates": {"lat": 31.9974, "lng": -102.0983}},
-               {"address": "1424 Airport Freeway, Suite N, Bedford, TX 76022", "coordinates": {"lat": 32.8440, "lng": -97.1228}},
-               {"address": "3003 Fannin St, Houston, TX 77004", "coordinates": {"lat": 29.7419, "lng": -95.3698}},
-               {"address": "117 Jane Lane, Hillsboro, TX 76645", "coordinates": {"lat": 32.0107, "lng": -97.1289}},
-               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}},
-               {"address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234", "coordinates": {"lat": 32.9267, "lng": -96.8906}}
+               {
+               "name": "Specialty Care Clinics - Hillsboro",
+               "address": "117 Jane Lane, Hillsboro, TX 76645",
+               "coordinates": {"lat": 32.0107, "lng": -97.1289},
+               "phone": "254-582-8007",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics - Farmers Branch",
+               "address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234",
+               "coordinates": {"lat": 32.9267, "lng": -96.8906},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Texas Back Care",
+               "address": "1424 Airport Freeway Suite N, Bedford, TX 76022",
+               "coordinates": {"lat": 32.8440, "lng": -97.1228},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "OrthoXpress",
+               "address": "2304 W Michigan Ave, Midland, TX 79701",
+               "coordinates": {"lat": 31.9974, "lng": -102.0983},
+               "phone": "432-322-8675",
+               "fax": "214-888-4450",
+               "categories": ["urgent_care", "primary_care", "specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "2700 W Pleasant Run Rd, Lancaster, TX 75146",
+               "coordinates": {"lat": 32.5920, "lng": -96.7889},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "American Infusion Care - Specialty Infusions",
+               "address": "3003 Fannin St, Houston, TX 77004",
+               "coordinates": {"lat": 29.7419, "lng": -95.3698},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["infusions"]
+               }
             ]
          },
          {
@@ -590,9 +863,30 @@
             "serviceKey": "general_surgery",
             "count": 3,
             "locations": [
-               {"address": "6407 S. Cooper St #117, Arlington, TX 76001", "coordinates": {"lat": 32.6554, "lng": -97.1289}},
-               {"address": "1424 Airport Freeway, Suite N, Bedford, TX 76022", "coordinates": {"lat": 32.8440, "lng": -97.1228}},
-               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}}
+               {
+               "name": "Texas Back Care",
+               "address": "1424 Airport Freeway Suite N, Bedford, TX 76022",
+               "coordinates": {"lat": 32.8440, "lng": -97.1228},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "2700 W Pleasant Run Rd, Lancaster, TX 75146",
+               "coordinates": {"lat": 32.5920, "lng": -96.7889},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Urgent Care Of Texas",
+               "address": "6407 S Cooper St #117, Arlington, TX 76001",
+               "coordinates": {"lat": 32.6554, "lng": -97.1289},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["urgent_care", "primary_care", "specialty_care", "all_other"]
+               }
             ]
          },
          {
@@ -600,8 +894,22 @@
             "serviceKey": "plastic_surgery",
             "count": 2,
             "locations": [
-               {"address": "4211 Cedar Springs Rd, Dallas, TX 75219", "coordinates": {"lat": 32.8089, "lng": -96.8067}},
-               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}}
+               {
+               "name": "Specialty Care Clinics",
+               "address": "2700 W Pleasant Run Rd, Lancaster, TX 75146",
+               "coordinates": {"lat": 32.5920, "lng": -96.7889},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "4211 Cedar Springs Rd, Dallas, TX 75219",
+               "coordinates": {"lat": 32.8089, "lng": -96.8067},
+               "phone": "",
+               "fax": "",
+               "categories": ["specialty_care", "all_other"]
+               }
             ]
          },
          {
@@ -609,8 +917,22 @@
             "serviceKey": "podiatry",
             "count": 2,
             "locations": [
-               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}},
-               {"address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234", "coordinates": {"lat": 32.9267, "lng": -96.8906}}
+               {
+               "name": "Specialty Care Clinics - Farmers Branch",
+               "address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234",
+               "coordinates": {"lat": 32.9267, "lng": -96.8906},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "2700 W Pleasant Run Rd, Lancaster, TX 75146",
+               "coordinates": {"lat": 32.5920, "lng": -96.7889},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               }
             ]
          },
          {
@@ -618,8 +940,22 @@
             "serviceKey": "vascular_surgery",
             "count": 2,
             "locations": [
-               {"address": "2700 W Pleasant Run Rd, Lancaster, TX 75146", "coordinates": {"lat": 32.5920, "lng": -96.7889}},
-               {"address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234", "coordinates": {"lat": 32.9267, "lng": -96.8906}}
+               {
+               "name": "Specialty Care Clinics - Farmers Branch",
+               "address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234",
+               "coordinates": {"lat": 32.9267, "lng": -96.8906},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics",
+               "address": "2700 W Pleasant Run Rd, Lancaster, TX 75146",
+               "coordinates": {"lat": 32.5920, "lng": -96.7889},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               }
             ]
          },
          {
@@ -627,8 +963,22 @@
             "serviceKey": "cardiology",
             "count": 2,
             "locations": [
-               {"address": "221 Regency Parkway #105, Mansfield, TX 76063", "coordinates": {"lat": 32.5632, "lng": -97.1417}},
-               {"address": "2727 Bolton Boone Drive #112, Desoto, TX 75115", "coordinates": {"lat": 32.5899, "lng": -96.8570}}
+               {
+               "name": "Precision Cardiac and Vascular Care",
+               "address": "221 Regency Parkway #105, Mansfield, TX 76063",
+               "coordinates": {"lat": 32.5632, "lng": -97.1417},
+               "phone": "214-884-7525",
+               "fax": "214-884-7551",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Precision Cardiac and Vascular Care",
+               "address": "2727 Bolton Boone Drive #112, Desoto, TX 75115",
+               "coordinates": {"lat": 32.5899, "lng": -96.8570},
+               "phone": "214-884-7525",
+               "fax": "214-884-7551",
+               "categories": ["specialty_care", "all_other"]
+               }
             ]
          },
          {
@@ -636,8 +986,22 @@
             "serviceKey": "oncology",
             "count": 2,
             "locations": [
-               {"address": "7777 Forest Ln, Ste B238, Dallas, TX 75230", "coordinates": {"lat": 32.9128, "lng": -96.7678}},
-               {"address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234", "coordinates": {"lat": 32.9267, "lng": -96.8906}}
+               {
+               "name": "Specialty Care Clinics - Farmers Branch",
+               "address": "13988 Diplomat Dr, Suite 100, Farmers Branch, TX 75234",
+               "coordinates": {"lat": 32.9267, "lng": -96.8906},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics - Plano",
+               "address": "5085 W Park Blvd Ste 200, Plano, TX 75093",
+               "coordinates": {"lat": 33.0150, "lng": -96.8200},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["infusions", "all_other"]
+               }
             ]
          },
          {
@@ -645,9 +1009,30 @@
             "serviceKey": "chiropractic",
             "count": 3,
             "locations": [
-               {"address": "10622 Shiloh Rd, Dallas, TX 75228", "coordinates": {"lat": 32.8234, "lng": -96.6714}},
-               {"address": "220 E 3rd Ave, Corsicana, TX 75110", "coordinates": {"lat": 32.0954, "lng": -96.4664}},
-               {"address": "1313 E Frank St, Hillsboro, TX 76645", "coordinates": {"lat": 32.0107, "lng": -97.1189}}
+               {
+               "name": "Casa View Chiropractic Clinic",
+               "address": "10622 Shiloh Rd, Dallas, TX 75228",
+               "coordinates": {"lat": 32.8234, "lng": -96.6714},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["primary_care", "specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics Occupational Medicine",
+               "address": "1313 E Frank St, Hillsboro, TX 76645",
+               "coordinates": {"lat": 32.0107, "lng": -97.1189},
+               "phone": "972-865-4454",
+               "fax": "214-888-4450",
+               "categories": ["specialty_care", "all_other"]
+               },
+               {
+               "name": "Specialty Care Clinics MedSurg & Compcare",
+               "address": "220 E 3rd Ave, Corsicana, TX 75110",
+               "coordinates": {"lat": 32.0954, "lng": -96.4664},
+               "phone": "903-874-5866",
+               "fax": "903-874-5083",
+               "categories": ["specialty_care", "all_other"]
+               }
             ]
          }
       ];
@@ -891,6 +1276,9 @@
             if (locationData) {
                locations = locationData.locations.map(loc => ({
                   address: loc.address,
+                  name: loc.name,
+                  phone: loc.phone,
+                  fax: loc.fax,
                   lat: loc.coordinates.lat,
                   lng: loc.coordinates.lng,
                   type: locationData.type,
@@ -904,6 +1292,9 @@
                data.locations.forEach(loc => {
                   locations.push({
                      address: loc.address,
+                     name: loc.name,
+                     phone: loc.phone,
+                     fax: loc.fax,
                      lat: loc.coordinates.lat,
                      lng: loc.coordinates.lng,
                      type: data.type,
@@ -989,7 +1380,7 @@
             // Check if second part is a suite/unit (contains "Suite", "Ste", "Unit", "#")
             let suite = '';
             let cityStateZip = '';
-            
+
             if (addressParts.length > 2) {
                const secondPart = addressParts[1] || '';
                if (secondPart.match(/suite|ste|unit|#/i)) {
@@ -1008,7 +1399,7 @@
             return `
                      <div class="loc-map-sec-clinic-card" id="${locationId}" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-                           <h3 style="color: #2563eb; margin: 0; font-size: 1rem; font-weight: 600; line-height: 1.4; flex: 1;">${location.type}</h3>
+                           <h3 style="color: #2563eb; margin: 0; font-size: 1rem; font-weight: 600; line-height: 1.4; flex: 1;">${location.name}</h3>
                            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; margin-left: 16px;">
                               ${location.distance !== null ? `
                                  <span style="color: #1f2937; font-size: 0.875rem; font-weight: 500; white-space: nowrap;">
@@ -1041,7 +1432,7 @@
                               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#16a34a" style="flex-shrink: 0;">
                                  <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                               </svg>
-                              682-549-7961
+                               ${location.phone}
                            </a>
                         </div>
 
@@ -1121,7 +1512,7 @@
                const mapQuery = encodeURIComponent(location.address);
                const directionsLink = `https://www.google.com/maps/dir/?api=1&destination=${mapQuery}`;
                const detailsLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
-               
+
                const infoWindow = new google.maps.InfoWindow({
                   content: `
                      <div style="padding: 12px 16px; min-width: 250px; font-family: Arial, sans-serif;">
@@ -1143,7 +1534,7 @@
                      marker.setAnimation(null);
                      currentlyBouncingMarker = null;
                   }
-                  
+
                   // Close all other info windows
                   markers.forEach(m => {
                      if (m.infoWindow) {
@@ -1175,10 +1566,10 @@
          if (currentlyBouncingMarker) {
             currentlyBouncingMarker.setAnimation(null);
          }
-         
+
          // Find the marker for this location
          const marker = locationMarkersMap.get(address);
-         
+
          if (marker) {
             // Start marker bouncing - it will continue until clicked or another marker is selected
             marker.setAnimation(google.maps.Animation.BOUNCE);
